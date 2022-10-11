@@ -6,11 +6,14 @@
 
 class Button : public Widget {
 
+    public:
+        
+        void draw () {
+            perror ("TRYING TO DRAW BUTTON\n");
+        }
 
-    
-    void draw () {
-        perror ("TRYING TO DRAW BUTTON\n");
-    }
+
+    private:
 
 };
 
