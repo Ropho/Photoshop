@@ -4,7 +4,7 @@
 
 #include "../class_widget/widget.hpp"
 #include "../general.hpp"
-
+#include "../class_vector/vector.hpp"
 
 class Manager {
 
@@ -31,7 +31,7 @@ class Manager {
 
 
     private:
-        std::vector <Widget *> arr {};
+        vector <Widget *> arr {};
 
 
 };
