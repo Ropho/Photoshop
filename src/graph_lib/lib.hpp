@@ -1,5 +1,9 @@
+#ifndef LIB_HPP
+#define LIB_HPP
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+
 
 namespace GLUT {
 
@@ -13,13 +17,24 @@ enum EVENTS {
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
 class GL {
 
+
+
     public:
         
-        GL () = delete;
+         GL () = delete;
         
+        ~GL () {
+            delete pixels;
+        }
+
+
         GL (size_t WIDTH, size_t HEIGHT) :
-                window(sf::VideoMode(WIDTH, HEIGHT), "MAIN WINDOW")
-            {}
+                window(sf::VideoMode(WIDTH, HEIGHT), "MAIN WINDOW"),
+                WIDTH_ (WIDTH),
+                HEIGHT_ (HEIGHT)
+            {
+                puts ("GL CTOR\n");
+            }
 
 
         bool still_open () {
@@ -58,10 +73,24 @@ class GL {
             }
         }
 
+
+/////////////////////////////////////////////////DRAW
+
+        void draw_canvas ();
+
     private:
         sf::RenderWindow  window {};
+        int WIDTH_  = 0;
+        int HEIGHT_ = 0;
         sf::Event   event  {};
+        sf::Uint8* pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
+
 };
 
 
-};
+}
+
+
+    extern GLUT::GL gl;
+
+#endif

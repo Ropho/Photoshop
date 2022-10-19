@@ -6,13 +6,15 @@ CXXFLAGS 	= -ggdb3 -std=c++17 -O2 -Wall -Wextra
 # SRC_DIR		= ./ ./src/class_kernel ./src/class_sys ./src/class_r_vector 
 # BUILD_DIR 	= build
 
-SRC 	= $(wildcard src/*.cpp src/class_window/*.cpp)
+SRC 	= $(wildcard src/*.cpp src/graph_lib/*.cpp)
 
 INCLUDE = -lsfml-graphics -lsfml-window -lsfml-system
 
 $(TARGET): $(SRC)
 	$(CXX) $(CXXFLAGS) $^ $(INCLUDE) -o $@
 
+build:
+	$(CXX) $(CXXFLAGS) $(SRC) $(INCLUDE) -o $(TARGET)
 
 run:
 	./bin/prog

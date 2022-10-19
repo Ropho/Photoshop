@@ -5,6 +5,8 @@
 #include "../class_widget/widget.hpp"
 #include "../general.hpp"
 #include "../class_vector/vector.hpp"
+#include "../class_canvas/canvas.hpp"
+
 
 class Manager {
 
