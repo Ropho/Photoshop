@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-
+#include "../general.hpp"
 
 namespace GLUT {
 
@@ -24,6 +24,7 @@ class GL {
          GL () = delete;
         
         ~GL () {
+            LOG ("~GL");
             delete pixels;
         }
 
@@ -33,7 +34,7 @@ class GL {
                 WIDTH_ (WIDTH),
                 HEIGHT_ (HEIGHT)
             {
-                puts ("GL CTOR\n");
+                LOG ("GL ()");
             }
 
 

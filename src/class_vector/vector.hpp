@@ -2,7 +2,7 @@
 #define VECTOR_HPP
 
 #include <iostream>
-
+#include "../general.hpp"
 
 #define DUMP 0xDEAD
 
@@ -13,21 +13,21 @@ class vector {
 
 /////////////////////////////////////////////////DTOR
         ~vector () {
-            fprintf (stderr, "DTOR\n");
+            LOG ("~VECTOR");
 
             clear ();
        }
 
 /////////////////////////////////////////////////CTOR
         vector () {
-            fprintf (stderr, "DEFAULT CTOR\n");
+            LOG ("DEFAULT CTOR");
         }
 
 
         explicit vector (const size_t& size) :
             cap_ (MULTY_ * size), size_ (size)
         {
-            fprintf (stderr, "SIZE CTOR\n");
+            LOG ("SIZE CTOR");
 
             cap_ *= MULTY_;
 
@@ -42,7 +42,7 @@ class vector {
             size_ (size), cap_ (size)
         {
 
-            fprintf (stderr, "PARAM CTOR\n");
+            LOG ("PARAM CTOR");
 
             cap_ *= MULTY_;
 
@@ -56,7 +56,7 @@ class vector {
         vector (const vector& vec) :
             cap_ (vec.cap ()), size_ (vec.size ())
         {
-            fprintf (stderr, "COPY CTOR\n");
+            LOG ("COPY CTOR");
 
             data_ = (T*) operator new (cap_ * sizeof (T));
 
@@ -71,7 +71,7 @@ class vector {
         // vector (vector&& vec) noexcept :
         //     cap_ (vec.cap ()), size_ (vec.size ()), data_ (vec.data ())
         // {
-        //     fprintf (stderr, "MOVE CTOR\n");
+            // LOG ("MOVE CTOR");
          
         //     vec.data_ = nullptr;
         //     vec.cap_  = 0;
@@ -119,7 +119,12 @@ class vector {
 
 
             vector tmp (size_);
-            tmp.cap_ = cap_ * MULTY_;
+            
+            if (cap_ != 0) {
+                tmp.cap_ = cap_ * MULTY_;
+            }
+            else
+                tmp.cap_ = 1;
 
             for (size_t i = 0; i < size_; ++i) {
                 tmp[i] = data_[i];
@@ -173,7 +178,7 @@ class vector {
 
     vector& operator = (const vector & vec) {
 
-        fprintf (stderr, "=\n");
+            LOG ("=");
 
         clear ();
 
@@ -191,7 +196,7 @@ class vector {
 
     vector& operator = (vector && vec) {
 
-        fprintf (stderr, "MOVE =\n");
+            LOG ("MOVE");
 
         clear ();
 
