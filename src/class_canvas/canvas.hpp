@@ -12,25 +12,33 @@ class Canvas : public Widget {
     public:
 
         ~Canvas () {
-            LOG ("~CANVAS");
+            LOG;
         }
 
-        Canvas (Point start, double width, double height) :
+        Canvas (Point start, int width, int height) :
             Widget (start, width, height)
         {
-            LOG ("CANVAS ()");
+            LOG;
         }
 
         void draw  () {
             
-            gl.draw_canvas ();
+            gl.draw_canvas (start_, width_, height_, color_);
         }
         
         // void close ();
         // void move  ();
-        // void on_click ();
+        bool on_click (int x, int y) {
+            if (check_bound (x, y)) {
+                fprintf (stderr, "IN CANVAS!!!!\n");
+                return true;
+            }
+            return false;
+        }
+
         // void on_press ();
 
+        int color_ = GLUT::BLUE;
 };
 
 #endif

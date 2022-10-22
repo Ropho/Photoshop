@@ -4,11 +4,11 @@
 #include <iostream>
 #include <vector>
 
-#define LOG(str) do {                                           \
-                log (__PRETTY_FUNCTION__, str);                 \
+#define LOG do {                                           \
+                log (__PRETTY_FUNCTION__);                 \
             } while (0)
 
-void log (const char *func_name, const char *str);
+void log (const char *func_name);
 
 
 #endif

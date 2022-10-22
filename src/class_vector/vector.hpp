@@ -13,21 +13,21 @@ class vector {
 
 /////////////////////////////////////////////////DTOR
         ~vector () {
-            LOG ("~VECTOR");
+            LOG;
 
             clear ();
        }
 
 /////////////////////////////////////////////////CTOR
         vector () {
-            LOG ("DEFAULT CTOR");
+            LOG;
         }
 
 
         explicit vector (const size_t& size) :
             cap_ (MULTY_ * size), size_ (size)
         {
-            LOG ("SIZE CTOR");
+            LOG;
 
             cap_ *= MULTY_;
 
@@ -42,7 +42,7 @@ class vector {
             size_ (size), cap_ (size)
         {
 
-            LOG ("PARAM CTOR");
+            LOG;
 
             cap_ *= MULTY_;
 
@@ -56,7 +56,7 @@ class vector {
         vector (const vector& vec) :
             cap_ (vec.cap ()), size_ (vec.size ())
         {
-            LOG ("COPY CTOR");
+            LOG;
 
             data_ = (T*) operator new (cap_ * sizeof (T));
 
@@ -178,7 +178,7 @@ class vector {
 
     vector& operator = (const vector & vec) {
 
-            LOG ("=");
+            LOG;
 
         clear ();
 
@@ -196,7 +196,7 @@ class vector {
 
     vector& operator = (vector && vec) {
 
-            LOG ("MOVE");
+            LOG;
 
         clear ();
 

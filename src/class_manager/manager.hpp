@@ -2,13 +2,14 @@
 #define MANAGER_HPP
 
 
-// #include "../class_widget/widget.hpp"
+#include "../class_widget/widget.hpp"
 #include "../general.hpp"
 #include "../class_vector/vector.hpp"
 #include "../class_canvas/canvas.hpp"
+#include "../class_button/button.hpp"
 
 
-class Manager {
+class Manager : public Widget {
 
     public:
         // Manager (size_t cap) :
@@ -16,20 +17,12 @@ class Manager {
         //     {}
 
         ~Manager () {
-            LOG ("MANAGER ()");
+            LOG;
             clear ();
         }
 
         void add (Widget *widget) {
-
             arr.push_back (widget);
-            // Canvas canvas ({100, 100}, 100, 100);
-            // Widget *ptr = &canvas;
-            // int keke = 1;
-            // arr.push_back (&canvas);
-            // kek[0] = widget;
-            // kek[0]->draw ();
-            // widget->draw ();
         }
         
         
@@ -38,16 +31,25 @@ class Manager {
         }
 
 
-        void draw_all () {
+/////////////////////////////////////////////////VIRTUAL
+
+        bool on_click (int x, int y) {
+            for (int i = (int) arr.size () - 1; i >= 0; --i)
+                if (arr[i]->on_click (x, y))
+                    return true;
+            
+            return false;
+        }
+
+        void draw () {
             for (size_t i = 0; i < arr.size (); ++i)
                 arr[i]->draw ();
         }
 
-
     private:
         // vector <Widget *> arr {};
         std::vector <Widget *> arr {};
-        Widget *kek [100];
+        // Widget *kek [100];
 
 
 };

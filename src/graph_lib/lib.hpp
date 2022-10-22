@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "../general.hpp"
+#include "../class_point/point.hpp"
+
 
 namespace GLUT {
 
@@ -11,8 +13,19 @@ enum EVENTS {
 
     NO_EVENT = 0,
     CLOSE    = 1,
+    CLICK    = 2,
 
 };
+
+enum COLORS {
+
+    BLACK   = 0,
+    RED     = 1,
+    GREEN   = 2,
+    BLUE    = 3,
+    WHITE   = 255,
+};
+
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
 class GL {
@@ -24,17 +37,17 @@ class GL {
          GL () = delete;
         
         ~GL () {
-            LOG ("~GL");
+            LOG;
             delete pixels;
         }
 
 
         GL (size_t WIDTH, size_t HEIGHT) :
                 window(sf::VideoMode(WIDTH, HEIGHT), "MAIN WINDOW"),
-                WIDTH_ (WIDTH),
+                WIDTH_  (WIDTH),
                 HEIGHT_ (HEIGHT)
             {
-                LOG ("GL ()");
+                LOG;
             }
 
 
@@ -52,6 +65,15 @@ class GL {
             window.close();
         }
 
+        void click (int *x, int *y) {
+            
+            *x = event.mouseButton.x;
+            *y = event.mouseButton.y;
+            // fprintf (stderr, "CURRENT POS \t X: %d \t Y: %d\n", *x, *y);
+
+        }
+
+
         void refresh () {
 
             window.clear (sf::Color::Black);
@@ -59,13 +81,16 @@ class GL {
             window.display ();
         }
 
-
         EVENTS get_event () {
 
             switch (event.type) {
                 
                 case sf::Event::Closed:
                     return CLOSE;
+                break;
+
+                case sf::Event::MouseButtonPressed:
+                    return CLICK;
                 break;
 
                 default:
@@ -77,7 +102,8 @@ class GL {
 
 /////////////////////////////////////////////////DRAW
 
-        void draw_canvas ();
+        void draw_canvas (Point start, int width, int height, int color);
+        void draw_color_changer (Point start, int width, int height, int color);
 
     private:
         sf::RenderWindow  window {};
