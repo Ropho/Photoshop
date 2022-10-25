@@ -1,9 +1,6 @@
 #include "lib.hpp"
 
-    const int WIDTH  = 800;
-    const int HEIGHT = 600;
-    
-    GLUT::GL gl (WIDTH, HEIGHT);
+    GLUT::GL gl (GLUT::WIDTH, GLUT::HEIGHT);
 
 namespace GLUT {
     

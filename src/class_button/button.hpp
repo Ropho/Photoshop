@@ -1,18 +1,19 @@
 #ifndef BUTTON_HPP
 #define BUTTON_HPP
 
-#include "../class_widget/widget.hpp"
 #include "../general.hpp"
+#include "../class_widget/widget.hpp"
+#include "../class_cmd/cmd.hpp"
 
 namespace Button {
-        
+
 
     class Abstract_Button : public Widget {
 
         public:
 
-            Abstract_Button (Point start, int width, int height) :
-                Widget (start, width, height)
+            Abstract_Button (Coords coords, Widget *parent) :
+                Widget (coords, parent)
             {
                 LOG;
             }
@@ -29,90 +30,27 @@ namespace Button {
 
 
     template <typename T>
-    class Shower : public Abstract_Button {
-
-        public:
-            Shower (Point start, int width, int height, T val) :
-                Abstract_Button (start, width, height),
-                val_ (val)
-            {
-                LOG;
-            }
-
-
-            ~Shower () {
-                LOG;
-            }
-
-            void action () {
-                // gl.show ();
-            }
-
-            void draw () {
-
-            }
-
-            void on_click () {
-
-                action ();
-            }
-
-        private:
-
-            T val_ = NULL;
-    };
-
-
-    template <typename T>
     class Changer : public Abstract_Button {
 
         public:
-            Changer (Point start, int width, int height, T* ptr) :
-                Abstract_Button (start, width, height),
-                ptr_ (ptr)
+            Changer (Coords coords, Widget *parent) :
+                Abstract_Button (coords, parent)
             {
                 LOG;
             }
-
-            enum ACTIONS {
-
-                SET = 1,
-                ADD = 2,
-                MUL = 3,
-                DEL = 4,
-                ERASE = 5,
-                
-            };
-
 
             ~Changer () {
                 LOG;
             }
-
-            // void action (ACTIONS act) {
-            //     *ptr_ = 100;
-            // }
-
-            // void draw () {
-            //     gl.draw_ ();
-            // }
-
-            // void on_click () {
-
-            //     action ();
-            // }
-
-        protected:
-            T* ptr_ = nullptr;
     };
 
 
-    class Color_Changer : public Changer <int> {
+    class Color_Changer : public Changer <Widget> {
 
         public:
-            Color_Changer (Point start, int width, int height, int* ptr, int color) :
-                Changer (start, width, height, ptr),
-                color_ (color)
+            Color_Changer (Coords coords, Widget* ptr, int color) :
+                Changer (coords, ptr),
+                color_  (color)
             {
                 LOG;
             }
@@ -122,11 +60,12 @@ namespace Button {
             }
 
             void action () {
-                *ptr_ = color_;
+                Cmd <int> cmd (ACTIONS::SET_COLOR, color_);
+                parent_ -> controller (cmd);
             }
 
             void draw () {
-                gl.draw_color_changer (start_, width_, height_, color_);
+                gl.draw_color_changer (coords_.strt (), coords_.width (), coords_.height (), color_);
             }
             
             bool on_click (int x, int y) {

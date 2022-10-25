@@ -12,9 +12,10 @@
 class Manager : public Widget {
 
     public:
-        // Manager (size_t cap) :
-        //     arr (cap)
-        //     {}
+
+        Manager (Widget * parent) :
+            Widget (parent)
+            {}
 
         ~Manager () {
             LOG;
@@ -46,12 +47,50 @@ class Manager : public Widget {
                 arr[i]->draw ();
         }
 
-    private:
-        // vector <Widget *> arr {};
-        std::vector <Widget *> arr {};
+    protected:
+        vector <Widget *> arr {};
+        // std::vector <Widget *> arr {};
         // Widget *kek [100];
 
 
+};
+
+
+
+class Painter : public Manager {
+
+    public:
+
+        Painter (Widget *parent) :
+            Manager (parent) 
+        {
+            LOG;
+        }
+
+        ~Painter () {
+            LOG;
+        }
+
+        void controller (const Cmd <int> & cmd) {
+
+            switch (cmd.action ()) {
+
+                case ACTIONS::SET_COLOR: {
+                    canvas_->set_color (cmd.param ());
+                }break;
+
+                default: {
+                }break;
+            }
+        }
+
+        void add_canvas (Widget *canvas) {
+            canvas_ = (Canvas *)canvas;
+        }
+
+
+        private:
+            Canvas *canvas_ = nullptr;
 };
 
 

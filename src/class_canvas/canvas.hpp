@@ -15,15 +15,15 @@ class Canvas : public Widget {
             LOG;
         }
 
-        Canvas (Point start, int width, int height) :
-            Widget (start, width, height)
+        Canvas (Coords coords, Widget *parent) :
+            Widget (coords, parent)
         {
             LOG;
         }
 
         void draw  () {
             
-            gl.draw_canvas (start_, width_, height_, color_);
+            gl.draw_canvas (coords_.strt (), coords_.width (), coords_.height (), color_);
         }
         
         // void close ();
@@ -36,9 +36,14 @@ class Canvas : public Widget {
             return false;
         }
 
+        void set_color (int color) {
+            color_ = color;
+        }
+
         // void on_press ();
 
-        int color_ = GLUT::BLUE;
+        private:
+            int color_ = GLUT::BLUE;
 };
 
 #endif

@@ -9,6 +9,10 @@
 
 namespace GLUT {
 
+
+    const int WIDTH  = 1200;
+    const int HEIGHT = 800;
+    
 enum EVENTS {
 
     NO_EVENT = 0,
@@ -33,7 +37,7 @@ class GL {
 
 
     public:
-        
+
          GL () = delete;
         
         ~GL () {
@@ -99,7 +103,13 @@ class GL {
             }
         }
 
+        int width () const {
+            return WIDTH_;
+        }
 
+        int height () const {
+            return HEIGHT_;
+        }
 /////////////////////////////////////////////////DRAW
 
         void draw_canvas (Point start, int width, int height, int color);
