@@ -2,23 +2,23 @@
 #define CANVAS_HPP
 
 
-#include "../class_point/point.hpp"
 #include "../class_widget/widget.hpp"
-#include "../general.hpp"
+#include "../log/log.hpp"
 #include "../graph_lib/lib.hpp"
+
 
 class Canvas : public Widget {
 
     public:
 
         ~Canvas () {
-            LOG;
+            logger.log (__PF);
         }
 
         Canvas (Coords coords, Widget *parent) :
             Widget (coords, parent)
         {
-            LOG;
+            logger.log (__PF);
         }
 
         void draw  () {
@@ -31,6 +31,11 @@ class Canvas : public Widget {
         bool on_click (int x, int y) {
             if (check_bound (x, y)) {
                 fprintf (stderr, "IN CANVAS!!!!\n");
+                
+                Cmd <int> cmd (ACTIONS::USE_TOOL, NULL);
+                parent_ -> controller (cmd);
+                // paint ();
+                
                 return true;
             }
             return false;

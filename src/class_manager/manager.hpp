@@ -3,10 +3,11 @@
 
 
 #include "../class_widget/widget.hpp"
-#include "../general.hpp"
-#include "../class_vector/vector.hpp"
+#include "../log/log.hpp"
 #include "../class_canvas/canvas.hpp"
 #include "../class_button/button.hpp"
+#include "../class_tool/tool.hpp"
+#include "../class_cmd/cmd.hpp"
 
 
 class Manager : public Widget {
@@ -18,21 +19,26 @@ class Manager : public Widget {
             {}
 
         ~Manager () {
-            LOG;
-            clear ();
-        }
+            logger.log (__PF);
 
-        void add (Widget *widget) {
-            arr.push_back (widget);
-        }
-        
-        
-        void clear () {
+            //MAYBE NO USE OF FACTORY
+            //CLEARS ON HIS OWN all the stored elements =)
             arr.clear ();
         }
 
+        virtual void add (Widget *widget) {
+            arr.push_back (widget);
+        }
+
+
 
 /////////////////////////////////////////////////VIRTUAL
+//TO GET VIRTUAL POLYMORPHISM NEED VISITOR PATTERN
+//https://stackoverflow.com/questions/45849394/virtual-template-function-in-c
+
+        // virtual void controller (const Cmd <int>  & cmd) {};
+        // virtual void controller (const Cmd <int*> & cmd) = 0;
+
 
         bool on_click (int x, int y) {
             for (int i = (int) arr.size () - 1; i >= 0; --i)
@@ -56,32 +62,59 @@ class Manager : public Widget {
 };
 
 
+class Palette : public Manager {
 
-class Painter : public Manager {
 
     public:
 
-        Painter (Widget *parent) :
-            Manager (parent) 
+        Palette (Widget *parent) :
+            Manager (parent)
         {
-            LOG;
+            get_all_tools (tools);
+
+            for (size_t i = 0; i < tools.size (); ++i) {
+                map.insert ({tools[i]->name (), tools[i]});
+            }
+
+            logger.log (__PF);
         }
 
-        ~Painter () {
-            LOG;
+        ~Palette () noexcept {
+
+            tools.clear ();
+
+            logger.log (__PF);
         }
+
 
         void controller (const Cmd <int> & cmd) {
 
             switch (cmd.action ()) {
 
-                case ACTIONS::SET_COLOR: {
+                case ACTIONS::SET_CURRENT: {
+
+                    current_action = map.find (cmd.param ()) -> second;
+
+                    // logger.log (__PF);
+                }break;
+            
+               case ACTIONS::SET_COLOR: {
                     canvas_->set_color (cmd.param ());
+                    logger.log (__PF);
+                }break;
+
+                case ACTIONS::USE_TOOL: {
+                    current_action->action ();
+                    logger.log (__PF);
                 }break;
 
                 default: {
                 }break;
             }
+        }
+
+        void add (Widget *button) {
+            arr.push_back (button);
         }
 
         void add_canvas (Widget *canvas) {
@@ -91,7 +124,10 @@ class Painter : public Manager {
 
         private:
             Canvas *canvas_ = nullptr;
-};
 
+            vector <Tool *> tools {};
+            std::unordered_map <int, Tool *> map {};
+            Tool *current_action = nullptr;
+};
 
 #endif

@@ -1,20 +1,16 @@
-#include "general.hpp"
 #include "graph_lib/lib.hpp"
 #include "class_factory/factory.hpp"
+#include "class_tool/tool.hpp"
 
 //TODO:
 
-//1) add tools
-//2) refactor
+//1) add tools (canvas paint додумать логику)
 
 //3) vector fix
 //4) add textures to buttons
 //5) add configuration file
 
-
-void log (const char *func_name) {
-    fprintf (stderr, "FUNC: %s\n", func_name);
-}
+Logger logger {};
 
 
 int main (void) {
@@ -22,24 +18,30 @@ int main (void) {
     Factory fac {};
 
 /////////////////////////////////////////////////MANAGERS
+//static_cast read
+                                        //WIDGET* -> MANAGER*
     Widget *desktop = fac.make_manager (nullptr);
-    Widget *painter = fac.make_painter (desktop);
+    Widget *palette = fac.make_palette (desktop);
 
 /////////////////////////////////////////////////CANVAS
-    Coords canvas_coord (Point {gl.width () / 10, gl.height () / 4}, gl.width () / 2, gl.height () / 2);
-    Widget *canvas = fac.make_canvas (canvas_coord, painter);
+    Coords canvas_coord (Point {gl.width () / 4, gl.height () / 4}, gl.width () / 2, gl.height () / 2);
+    Widget *canvas = fac.make_canvas (canvas_coord, palette);
 
 /////////////////////////////////////////////////BUTTONS
     Coords button_coords (canvas_coord.strt () + Point {canvas_coord.width (), 0},
                           canvas_coord.height () / 3, canvas_coord.height () / 3);
-    Widget *button_red = fac.make_color_changer (button_coords, painter, GLUT::RED);
+    Widget *button_red = fac.make_color_changer (button_coords, palette, GLUT::RED);
 
     button_coords = button_coords + Coords {{0, button_coords.height ()}, 0, 0}; 
-    Widget *button_green = fac.make_color_changer (button_coords, painter, GLUT::GREEN);
+    Widget *button_green = fac.make_color_changer (button_coords, palette, GLUT::GREEN);
     
     button_coords = button_coords + Coords {{0, button_coords.height ()}, 0, 0};     
-    Widget *button_blue = fac.make_color_changer (button_coords, painter, GLUT::BLUE);
+    Widget *button_blue = fac.make_color_changer (button_coords, palette, GLUT::BLUE);
 
+/////////////////////////////////////////////////TOOLS
+
+    Coords pencil_coords (Point {gl.line_width (), gl.width () / 10}, gl.width ()  / 10, gl.width () / 10);
+    Widget *pencil = fac.make_palette_caller (pencil_coords, palette, TL::TOOLS::PENCIL);
 
 /////////////////////////////////////////////////EVENT LOOP
     while (gl.still_open ()) {
@@ -70,8 +72,10 @@ int main (void) {
             }
         }
 
-        // gl.refresh ();
         desktop->draw ();
+        gl.refresh ();
     }
 
+    //CALLS ALL OTHER DTORS
+    delete desktop;
 }

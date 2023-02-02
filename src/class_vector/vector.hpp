@@ -2,7 +2,7 @@
 #define VECTOR_HPP
 
 #include <iostream>
-#include "../general.hpp"
+#include "../log/log.hpp"
 
 #define DUMP 0xDEAD
 
@@ -13,21 +13,21 @@ class vector {
 
 /////////////////////////////////////////////////DTOR
         ~vector () {
-            LOG;
+            logger.log (__PF);
 
             clear ();
        }
 
 /////////////////////////////////////////////////CTOR
         vector () {
-            LOG;
+            logger.log (__PF);
         }
 
 
         explicit vector (const size_t& size) :
             cap_ (MULTY_ * size), size_ (size)
         {
-            LOG;
+            logger.log (__PF);
 
             cap_ *= MULTY_;
 
@@ -42,7 +42,7 @@ class vector {
             size_ (size), cap_ (size)
         {
 
-            LOG;
+            logger.log (__PF);
 
             cap_ *= MULTY_;
 
@@ -56,7 +56,7 @@ class vector {
         vector (const vector& vec) :
             cap_ (vec.cap ()), size_ (vec.size ())
         {
-            LOG;
+            logger.log (__PF);
 
             data_ = (T*) operator new (cap_ * sizeof (T));
 
@@ -178,7 +178,7 @@ class vector {
 
     vector& operator = (const vector & vec) {
 
-            LOG;
+        logger.log (__PF);
 
         clear ();
 
@@ -196,7 +196,7 @@ class vector {
 
     vector& operator = (vector && vec) {
 
-            LOG;
+        logger.log (__PF);
 
         clear ();
 

@@ -15,7 +15,7 @@ class Widget {
     public:
 
         virtual ~Widget () {
-            LOG;
+            logger.log (__PF);
         }
 
         Widget () = default;
@@ -23,14 +23,14 @@ class Widget {
         Widget (Widget *parent) :
             parent_ (parent)
         {
-            LOG;
+            logger.log (__PF);
         }
 
 
         Widget (Coords coords, Widget *parent) :
             coords_ (coords), parent_ (parent)
         {
-            LOG;
+            logger.log (__PF);
         }
 
         virtual void draw  () = 0;
@@ -51,8 +51,8 @@ class Widget {
         }
 
 /////////////////////////////////////////////////FOR MANAGER CLASS
-        virtual void add (Widget *widget) {};
-        virtual void clear () {};
+        // virtual void add (Widget *widget) {};
+        // virtual void clear () {};
         virtual void controller (const Cmd <int> & cmd) {};
 
 };

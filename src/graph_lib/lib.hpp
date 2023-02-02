@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "../general.hpp"
+#include "../log/log.hpp"
 #include "../class_point/point.hpp"
 
 
@@ -41,7 +41,7 @@ class GL {
          GL () = delete;
         
         ~GL () {
-            LOG;
+            logger.log (__PF);
             delete pixels;
         }
 
@@ -51,7 +51,7 @@ class GL {
                 WIDTH_  (WIDTH),
                 HEIGHT_ (HEIGHT)
             {
-                LOG;
+                logger.log (__PF);
             }
 
 
@@ -80,9 +80,9 @@ class GL {
 
         void refresh () {
 
-            window.clear (sf::Color::Black);
-   
+            // window.clear (sf::Color::Black);
             window.display ();
+   
         }
 
         EVENTS get_event () {
@@ -110,10 +110,15 @@ class GL {
         int height () const {
             return HEIGHT_;
         }
+        
+        int line_width () const {
+            return line_width_;
+        }
 /////////////////////////////////////////////////DRAW
 
         void draw_canvas (Point start, int width, int height, int color);
         void draw_color_changer (Point start, int width, int height, int color);
+        void draw_border (Point start, int width, int height);
 
     private:
         sf::RenderWindow  window {};
@@ -122,6 +127,7 @@ class GL {
         sf::Event   event  {};
         sf::Uint8* pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
 
+        int line_width_ = 1;
 };
 
 

@@ -4,7 +4,11 @@
 
     enum ACTIONS {
 
-        SET_COLOR = 1,
+        SET_COLOR   = 1,
+        SET_CURRENT = 2,
+        
+        USE_TOOL    = 3,
+        
     };
 
 

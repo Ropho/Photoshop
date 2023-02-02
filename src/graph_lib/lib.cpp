@@ -9,6 +9,17 @@ namespace GLUT {
 
     // GL gl (WIDTH, HEIGHT);
 
+    void GL::draw_border (Point start, int width, int height) {
+
+        sf::RectangleShape border (sf::Vector2f (width, height));
+        border.move (start.get_x (), start.get_y ());
+
+        border.setFillColor (sf::Color::Black);
+        border.setOutlineThickness(1);
+        border.setOutlineColor(sf::Color::Yellow);
+        window.draw (border);
+    }
+
 
     void GL::draw_canvas (Point start, int width, int height, int color) {
 
@@ -66,15 +77,56 @@ namespace GLUT {
         
         window.draw (sprite);
 
-        window.display ();
+        // window.display ();
     }
 
 
 
     void GL::draw_color_changer (Point start, int width, int height, int color) {
 
-    /////////////////////////////////////////////////
+        sf::CircleShape circle (width / 2);
+        circle.move (start.get_x (), 
+                     start.get_y ());
+
+
         sf::Texture texture {};
+
+        switch (color) {
+
+            case RED:
+                if (!texture.loadFromFile ("/home/ropho/plus/photoshop/textures/buttons/red.png")) {
+                    abort ();
+                }
+            break;
+
+            case GREEN:
+                if (!texture.loadFromFile ("/home/ropho/plus/photoshop/textures/buttons/green.png")) {
+                    abort ();
+                }
+            break;
+
+            case BLUE:
+                if (!texture.loadFromFile ("/home/ropho/plus/photoshop/textures/buttons/blue.png")) {
+                    abort ();
+                }
+            break;
+
+            default:
+                abort ();
+            break;
+        }
+
+        // texture.setSmooth (true);
+
+        circle.setTexture (&texture);
+        // circle.setTextureRect (sf::IntRect (0, 0, width, height));
+        
+        window.draw (circle);
+        // window.display ();
+
+        return;
+    /////////////////////////////////////////////////
+        // sf::Texture texture {};
         texture.create (WIDTH_, HEIGHT_);
 
         sf::Sprite sprite (texture);
