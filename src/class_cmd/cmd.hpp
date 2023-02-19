@@ -4,10 +4,10 @@
 
     enum ACTIONS {
 
-        SET_COLOR   = 1,
-        SET_CURRENT = 2,
-        
-        USE_TOOL    = 3,
+        SET_COLOR       = 1,
+        SET_CURRENT     = 2,
+        REMOVE_CURRENT  = 3,
+        USE_TOOL        = 4,
         
     };
 
@@ -16,7 +16,7 @@
     class Cmd {
 
         public:
-            Cmd (int action, T param) :
+            Cmd (int action, T param = T ()) :
                 action_ (action), param_ (param)
             {}
             

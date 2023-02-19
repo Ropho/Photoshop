@@ -8,6 +8,7 @@
 #include "../class_button/button.hpp"
 #include "../class_tool/tool.hpp"
 #include "../class_cmd/cmd.hpp"
+#include <unordered_map>
 
 
 class Manager : public Widget {
@@ -57,13 +58,10 @@ class Manager : public Widget {
         vector <Widget *> arr {};
         // std::vector <Widget *> arr {};
         // Widget *kek [100];
-
-
 };
 
 
 class Palette : public Manager {
-
 
     public:
 
@@ -88,23 +86,38 @@ class Palette : public Manager {
 
 
         void controller (const Cmd <int> & cmd) {
-
+        
             switch (cmd.action ()) {
 
                 case ACTIONS::SET_CURRENT: {
-
                     current_action = map.find (cmd.param ()) -> second;
-
-                    // logger.log (__PF);
+                    logger.log (__PF);
                 }break;
-            
+
+                case ACTIONS::REMOVE_CURRENT: {
+                    current_action = nullptr;
+                    logger.log (__PF);
+                }break;
+
                case ACTIONS::SET_COLOR: {
                     canvas_->set_color (cmd.param ());
                     logger.log (__PF);
                 }break;
+            
+                default: {
+                }break;
+            }
+
+        }
+
+        void controller (const Cmd <Point> & cmd) {
+
+            switch (cmd.action ()) {
 
                 case ACTIONS::USE_TOOL: {
-                    current_action->action ();
+                    if (current_action != nullptr)
+                        current_action->action (cmd.param ());
+
                     logger.log (__PF);
                 }break;
 
@@ -112,6 +125,7 @@ class Palette : public Manager {
                 }break;
             }
         }
+
 
         void add (Widget *button) {
             arr.push_back (button);

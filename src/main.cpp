@@ -2,14 +2,6 @@
 #include "class_factory/factory.hpp"
 #include "class_tool/tool.hpp"
 
-//TODO:
-
-//1) add tools (canvas paint додумать логику)
-
-//3) vector fix
-//4) add textures to buttons
-//5) add configuration file
-
 Logger logger {};
 
 
@@ -41,23 +33,20 @@ int main (void) {
 /////////////////////////////////////////////////TOOLS
 
     Coords pencil_coords (Point {gl.line_width (), gl.width () / 10}, gl.width ()  / 10, gl.width () / 10);
-    Widget *pencil = fac.make_palette_caller (pencil_coords, palette, TL::TOOLS::PENCIL);
+    Widget *pencil = fac.make_palette_caller (pencil_coords, palette, GLUT::TOOLS::PENCIL);
 
 /////////////////////////////////////////////////EVENT LOOP
     while (gl.still_open ()) {
 
-        
         while (gl.check_events ()) {
 
             switch (gl.get_event ()) {
-                
-                
+    
                 case GLUT::CLOSE: {
                     gl.close ();
                 } break;
 
                 case GLUT::CLICK: {
-        
                     int x = 0;
                     int y = 0;
 
@@ -71,11 +60,9 @@ int main (void) {
 
             }
         }
-
         desktop->draw ();
         gl.refresh ();
     }
 
-    //CALLS ALL OTHER DTORS
     delete desktop;
 }

@@ -53,7 +53,13 @@ class Widget {
 /////////////////////////////////////////////////FOR MANAGER CLASS
         // virtual void add (Widget *widget) {};
         // virtual void clear () {};
-        virtual void controller (const Cmd <int> & cmd) {};
+
+        virtual void controller (const Cmd <int> & cmd) {
+            std::cout <<"FUCKING HELL\n";
+        };
+        virtual void controller (const Cmd <Point> & cmd) {
+            std::cout <<"FUCKING HELL\n";
+        };
 
 };
 

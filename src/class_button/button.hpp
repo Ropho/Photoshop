@@ -99,17 +99,27 @@
             }
 
             void action () {
-                Cmd <int> cmd (ACTIONS::SET_CURRENT, tool_name_);
-                parent_ -> controller (cmd);
+                
+                if (!active_) {
+                    active_ = true;
+                    Cmd <int> cmd (ACTIONS::SET_CURRENT, tool_name_);
+                    parent_ -> controller (cmd);
+                }
+                else {
+                    active_ = false;
+                    Cmd <int> cmd (ACTIONS::REMOVE_CURRENT, tool_name_);
+                    parent_ -> controller (cmd);
+                }
             }
 
             void draw () {
                 draw_border ();
-                // gl.draw_color_changer (coords_.strt (), coords_.width (), coords_.height (), color_);
+                gl.draw_palette_caller (coords_.strt (), coords_.width (), coords_.height (), tool_name_);
             }
 
 
         private:
+            bool active_ = false;
             int tool_name_ = 0;
     };
 

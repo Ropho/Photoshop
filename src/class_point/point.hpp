@@ -46,6 +46,9 @@ class Coords {
 
     public:
         
+        Coords () 
+            {}
+
         Coords (Point strt, int width, int height) :
             width_ (width), height_ (height), strt_ (strt)
             {}
@@ -69,6 +72,13 @@ class Coords {
         Coords operator - (const Coords& other) {
             return {strt () - other.strt (), width () - other.width (), height () - other.height ()};
         }
+
+        // void set (const Point &strt, int width, int height) {
+        //     width_ = width;
+        //     strt_ = strt;
+        //     height_ = height;
+        // }
+
     private:
         int width_   = 0;
         int height_  = 0;

@@ -18,12 +18,13 @@ class Canvas : public Widget {
         Canvas (Coords coords, Widget *parent) :
             Widget (coords, parent)
         {
+            gl.init_canvas (coords_);
+            gl.change_canvas (color_);
             logger.log (__PF);
         }
 
         void draw  () {
-            
-            gl.draw_canvas (coords_.strt (), coords_.width (), coords_.height (), color_);
+            gl.draw_canvas ();
         }
         
         // void close ();
@@ -32,10 +33,9 @@ class Canvas : public Widget {
             if (check_bound (x, y)) {
                 fprintf (stderr, "IN CANVAS!!!!\n");
                 
-                Cmd <int> cmd (ACTIONS::USE_TOOL, NULL);
+                Cmd <Point> cmd (ACTIONS::USE_TOOL, Point (x, y));
                 parent_ -> controller (cmd);
-                // paint ();
-                
+
                 return true;
             }
             return false;
@@ -43,12 +43,11 @@ class Canvas : public Widget {
 
         void set_color (int color) {
             color_ = color;
+            gl.change_canvas (color_);
         }
-
-        // void on_press ();
-
+        
         private:
-            int color_ = GLUT::BLUE;
+            int color_ = GLUT::WHITE;
 };
 
 #endif

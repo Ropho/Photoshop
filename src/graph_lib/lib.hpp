@@ -5,7 +5,7 @@
 #include <SFML/System.hpp>
 #include "../log/log.hpp"
 #include "../class_point/point.hpp"
-
+// #include "../class_tool/tool.hpp"
 
 namespace GLUT {
 
@@ -20,6 +20,13 @@ enum EVENTS {
     CLICK    = 2,
 
 };
+
+
+enum TOOLS {
+    PENCIL = 1,
+
+};
+
 
 enum COLORS {
 
@@ -42,7 +49,14 @@ class GL {
         
         ~GL () {
             logger.log (__PF);
-            delete pixels;
+            
+            delete[] pixels;
+            
+            for (size_t i = 0; i < textures.size (); ++i)
+                delete textures[i];
+
+            for (size_t i = 0; i < entities.size (); ++i)
+                delete entities[i];
         }
 
 
@@ -51,6 +65,12 @@ class GL {
                 WIDTH_  (WIDTH),
                 HEIGHT_ (HEIGHT)
             {
+                pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
+                texture_.create (WIDTH_, HEIGHT_);
+
+                sprite_ = new sf::Sprite {};
+                entities.push_back (sprite_);
+
                 logger.log (__PF);
             }
 
@@ -79,10 +99,8 @@ class GL {
 
 
         void refresh () {
-
             // window.clear (sf::Color::Black);
             window.display ();
-   
         }
 
         EVENTS get_event () {
@@ -115,19 +133,30 @@ class GL {
             return line_width_;
         }
 /////////////////////////////////////////////////DRAW
+        void draw_canvas ();
+        void init_canvas (const Coords &coords);
+        void change_canvas (int color);
+        void draw_color_changer (const Point &start, int width, int height, int color);
+        void draw_border (const Point &start, int width, int height);
+        void draw_palette_caller (const Point &start, int width, int height, int tool_name);
+        void draw_dot (const Point &pnt);
 
-        void draw_canvas (Point start, int width, int height, int color);
-        void draw_color_changer (Point start, int width, int height, int color);
-        void draw_border (Point start, int width, int height);
+        void draw_button (Point start, int width, int height, const std::string &texture_path);
 
     private:
         sf::RenderWindow  window {};
         int WIDTH_  = 0;
         int HEIGHT_ = 0;
         sf::Event   event  {};
-        sf::Uint8* pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
+        sf::Uint8 *pixels = nullptr;
+        sf::Texture texture_ {};
+        sf::Sprite *sprite_ = nullptr;
+        Coords canvas_;
 
         int line_width_ = 1;
+
+        std::vector <sf::Drawable *> entities {};
+        std::vector <sf::Texture *> textures {};
 };
 
 
