@@ -54,12 +54,21 @@ class Widget {
         // virtual void add (Widget *widget) {};
         // virtual void clear () {};
 
-        virtual void controller (const Cmd <int> & cmd) {
+        virtual void controller (Cmd cmd) {
             std::cout <<"FUCKING HELL\n";
         };
-        virtual void controller (const Cmd <Point> & cmd) {
-            std::cout <<"FUCKING HELL\n";
-        };
+        // virtual void controller (Cmd <Point> cmd) {
+        //     std::cout <<"FUCKING HELL 2\n";
+        // };
+        // virtual void controller (Cmd <GLUT::Entity *> cmd) {
+        //     std::cout <<"FUCKING HELL 3\n";
+        // };
+        // virtual void controller (Cmd <GLUT::Entity **> cmd) {
+        //     std::cout <<"FUCKING HELL 4\n";
+        // };
+        // virtual void controller (Cmd <nullptr_t> cmd) {
+        //     std::cout <<"FUCKING HELL 5\n";
+        // };
 
 };
 

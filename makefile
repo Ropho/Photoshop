@@ -1,7 +1,7 @@
 TARGET = ./bin/prog
 
 CXX 		= 	g++
-CXXFLAGS 	= 	-ggdb3 -std=c++11 -O2 -Wall -Wextra 								\
+CXXFLAGS 	= 	-ggdb3 -std=c++11 -O2 -Wall -Wextra -fpermissive 								\
 			  	-no-pie -Wno-narrowing -Wno-unused-parameter -Wno-unused-variable	\
 
 # SRC_DIR		= ./ ./src/class_kernel ./src/class_sys ./src/class_r_vector 

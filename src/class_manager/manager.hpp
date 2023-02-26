@@ -19,11 +19,9 @@ class Manager : public Widget {
             Widget (parent)
             {}
 
-        ~Manager () {
+        virtual ~Manager () {
             logger.log (__PF);
 
-            //MAYBE NO USE OF FACTORY
-            //CLEARS ON HIS OWN all the stored elements =)
             arr.clear ();
         }
 
@@ -54,8 +52,39 @@ class Manager : public Widget {
                 arr[i]->draw ();
         }
 
+        void send_cmd_down (Cmd cmd) {
+            
+            for (size_t i = 0; i < arr.size (); ++i) {
+                
+                if (cmd.from () != static_cast <void *> (arr[i])) {
+
+                    Manager *man = dynamic_cast <Manager *> (arr[i]);
+                    if (man != nullptr) {
+                        auto new_cmd = cmd;
+                        new_cmd.set_from (this);
+                        man->controller (new_cmd);
+                    }
+                }
+            }
+        }
+
+        // template <typename T>
+        void send_cmd_up (Cmd cmd) {
+                Manager *man = dynamic_cast <Manager *> (parent_);
+                    if (man != nullptr) {
+                        auto new_cmd = cmd;
+                        new_cmd.set_from (this);
+                        man->controller (new_cmd);
+                    }
+                else {
+                    logger.log (__PF);
+                    std::terminate ();
+                }
+
+        }
+
     protected:
-        vector <Widget *> arr {};
+        std::vector <Widget *> arr {};
         // std::vector <Widget *> arr {};
         // Widget *kek [100];
 };
@@ -68,80 +97,426 @@ class Palette : public Manager {
         Palette (Widget *parent) :
             Manager (parent)
         {
-            get_all_tools (tools);
+            logger.log (__PF);
+
+            get_all_tools (tools, this);
 
             for (size_t i = 0; i < tools.size (); ++i) {
                 map.insert ({tools[i]->name (), tools[i]});
             }
 
-            logger.log (__PF);
         }
 
         ~Palette () noexcept {
+            logger.log (__PF);
 
             tools.clear ();
+        }
+
+        void controller (Cmd cmd) override {
+            // cmd.info ();
+            // std::terminate ();
+
+            switch (cmd.type ()) {
+
+                case INT: {
+
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::SET_CURRENT: {
+                            logger.log (__PF);
+                            int param;
+                            cmd.param (&param);
+                            current_action = map.find (param) -> second;
+                        }break;
+
+                        case ACTIONS::REMOVE_CURRENT: {
+                            logger.log (__PF);
+                            current_action = nullptr;
+                        }break;
+
+                    case ACTIONS::CHANGE_BACKGROUND: {
+                            logger.log (__PF);
+                            send_cmd_down (cmd);
+                            // canvas_->set_color (cmd.param ());
+                        }break;
+                    
+                        default: {
+                        }break;
+                    }
+                }break;
+
+
+                case POINT: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::USE_TOOL: {
+                            logger.log (__PF);
+
+                            if (current_action != nullptr) {
+                                Point param;
+                                cmd.param (&param);
+                                current_action->action (param);
+                            }
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+
+                }break;
+
+                case ENTITY_PTR: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::ADD_ENTITY: {
+                            logger.log (__PF);
+                            fprintf (stderr, "AFTER \n");
+                            // std::terminate ();
+                            send_cmd_down (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+
+                }break;
+
+                case ENTITY_PTR_PTR: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::GET_ENTITY_CANVAS: {
+                            
+                            send_cmd_down (cmd);
+                            logger.log (__PF);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+            
+                }break;
+
+                case NULLPTR: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::DRAW_CANVAS: {
+                            // logger.log (__PF);
+
+                            send_cmd_down (cmd);
+                            // parent_ -> controller (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+
+                }break;
+
+                default: {
+
+                }break;
+            }
+        }
+
+        // void controller (Cmd <int> cmd) {
+        
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::SET_CURRENT: {
+        //             logger.log (__PF);
+        //             current_action = map.find (cmd.param ()) -> second;
+        //         }break;
+
+        //         case ACTIONS::REMOVE_CURRENT: {
+        //             logger.log (__PF);
+        //             current_action = nullptr;
+        //         }break;
+
+        //        case ACTIONS::CHANGE_BACKGROUND: {
+        //             logger.log (__PF);
+        //             send_cmd_down <int> (cmd);
+        //             // canvas_->set_color (cmd.param ());
+        //         }break;
+            
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <Point> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::USE_TOOL: {
+        //             logger.log (__PF);
+
+        //             if (current_action != nullptr)
+        //                 current_action->action (cmd.param ());
+
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <GLUT::Entity *> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::ADD_ENTITY: {
+        //             logger.log (__PF);
+        //             fprintf (stderr, "AFTER \n");
+        //             // std::terminate ();
+        //             send_cmd_down (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <nullptr_t> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::DRAW_CANVAS: {
+        //             // logger.log (__PF);
+
+        //             send_cmd_down <nullptr_t> (cmd);
+        //             // parent_ -> controller (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <GLUT::Entity **> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::GET_ENTITY_CANVAS: {
+                    
+        //             send_cmd_down (cmd);
+        //             logger.log (__PF);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // template <typename T>
+
+        private:
+
+            vector <Tool *> tools {};
+            std::unordered_map <int, Tool *> map {};
+            Tool *current_action = nullptr;
+
+};
+
+class Canvas_Man : public Manager {
+
+    public:
+
+        // template <typename T>
+
+        Canvas_Man (Widget *parent) :
+            Manager (parent)
+        {
 
             logger.log (__PF);
         }
 
+        ~Canvas_Man () noexcept {
 
-        void controller (const Cmd <int> & cmd) {
+            logger.log (__PF);
+        }
+
+        void controller (Cmd cmd) override {
+            // cmd.info ();
+            // std::terminate ();
+            switch (cmd.type ()) {
+
+                case INT: {
+                    switch (cmd.action ()) {
+
+                    case ACTIONS::CHANGE_BACKGROUND: {
+                            logger.log (__PF);
+                            
+                            // send_cmd_up <int> (cmd);
+                            int param;
+                            cmd.param (&param);
+                            canvas_->change_background (param);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+                }break;
+
+                case POINT: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::USE_TOOL: {
+                            logger.log (__PF);
+                            
+                            send_cmd_up (cmd);
+                            
+                            // parent_ -> controller (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+                }break;
+
+                case NULLPTR: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::DRAW_CANVAS: {
+                            // logger.log (__PF);
+
+                            send_cmd_up (cmd);
+                            // parent_ -> controller (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+
+                }break;
+
+                case ENTITY_PTR: {
+                    switch (cmd.action ()) {
+
+                        case ACTIONS::ADD_ENTITY: {
+                            // fprintf (stderr, "CANVAS MAN: %x FROM %x\n", this, cmd.from ());
+                            logger.log (__PF);
+                            send_cmd_up (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+                }break;
+
+                case ENTITY_PTR_PTR: {
+                    switch (cmd.action ()) {
+                        case ACTIONS::GET_ENTITY_CANVAS: {
+                            
+                            logger.log (__PF);
+                            send_cmd_up (cmd);
+                        }break;
+
+                        default: {
+                        }break;
+                    }
+
+                }break;
+
+                default:
+                break;
+            }
+        }
+        // void controller (Cmd <int> cmd) {
         
-            switch (cmd.action ()) {
+        //     switch (cmd.action ()) {
 
-                case ACTIONS::SET_CURRENT: {
-                    current_action = map.find (cmd.param ()) -> second;
-                    logger.log (__PF);
-                }break;
+        //        case ACTIONS::CHANGE_BACKGROUND: {
+        //             logger.log (__PF);
+                    
+        //             // send_cmd_up <int> (cmd);
+        //             canvas_->change_background (cmd.param ());
+        //         }break;
 
-                case ACTIONS::REMOVE_CURRENT: {
-                    current_action = nullptr;
-                    logger.log (__PF);
-                }break;
+        //         default: {
+        //         }break;
+        //     }
 
-               case ACTIONS::SET_COLOR: {
-                    canvas_->set_color (cmd.param ());
-                    logger.log (__PF);
-                }break;
-            
-                default: {
-                }break;
-            }
+        // }
 
+        // void controller (Cmd <nullptr_t> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::DRAW_CANVAS: {
+        //             // logger.log (__PF);
+
+        //             send_cmd_up <nullptr_t> (cmd);
+        //             // parent_ -> controller (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <Point> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::USE_TOOL: {
+        //             logger.log (__PF);
+                    
+        //             send_cmd_up (cmd);
+                    
+        //             // parent_ -> controller (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <GLUT::Entity *> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::ADD_ENTITY: {
+        //             // fprintf (stderr, "CANVAS MAN: %x FROM %x\n", this, cmd.from ());
+        //             logger.log (__PF);
+        //             send_cmd_up (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+        // void controller (Cmd <GLUT::Entity **> cmd) {
+
+        //     switch (cmd.action ()) {
+
+        //         case ACTIONS::GET_ENTITY_CANVAS: {
+                    
+        //             logger.log (__PF);
+        //             send_cmd_up (cmd);
+        //         }break;
+
+        //         default: {
+        //         }break;
+        //     }
+        // }
+
+
+        void add (Widget *entity) {
+            if (canvas_ == nullptr)
+                canvas_ = dynamic_cast <Canvas *> (entity);
+            arr.push_back (entity);
         }
 
-        void controller (const Cmd <Point> & cmd) {
-
-            switch (cmd.action ()) {
-
-                case ACTIONS::USE_TOOL: {
-                    if (current_action != nullptr)
-                        current_action->action (cmd.param ());
-
-                    logger.log (__PF);
-                }break;
-
-                default: {
-                }break;
-            }
-        }
-
-
-        void add (Widget *button) {
-            arr.push_back (button);
-        }
-
-        void add_canvas (Widget *canvas) {
-            canvas_ = (Canvas *)canvas;
+        Widget* canvas () {
+            return canvas_;
         }
 
 
         private:
             Canvas *canvas_ = nullptr;
 
-            vector <Tool *> tools {};
-            std::unordered_map <int, Tool *> map {};
-            Tool *current_action = nullptr;
 };
 
 #endif

@@ -10,15 +10,16 @@
 
 // void log (const char *func_name);
 
+enum MODES {
+
+    INFO     = 1,
+    CRITICAL = 2,
+};
+
 class Logger {
 
     public:
 
-        enum MODES {
-
-            INFO     = 1,
-            CRITICAL = 2,
-        };
 
         Logger (FILE* out = stderr) :
             out_ (out)

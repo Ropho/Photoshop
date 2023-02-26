@@ -4,41 +4,53 @@
 
 namespace GLUT {
     
-    void GL::init_canvas (const Coords &coords) {
+    GLUT::Entity* GL::init_canvas (const Coords &coords) {
+        
+        sf::Texture *texture = new sf::Texture {};
+        texture->create (WIDTH_, HEIGHT_);
+        canvas_textures.push_back (texture);
+
+        sf::Sprite *sprite = new sf::Sprite {};
+        // canvas_entities.push_back (sprite);
+
         canvas_ = coords;
+        return sprite;
     }
 
-    void GL::draw_dot (const Point &pnt) {
+    GLUT::Entity* GL::draw_dot (const Point &pnt) {
 
         sf::RectangleShape *dot = new sf::RectangleShape (sf::Vector2f (10, 10));
-        // dot.move (canvas_.strt().get_x (), canvas_.strt().get_y ());
-        dot->move (pnt.get_x (), pnt.get_y());
 
+        dot->move (pnt.get_x (), pnt.get_y());
         dot->setFillColor (sf::Color::Red);
-        // dot.setOutlineThickness(1);
-        // dot.setOutlineColor(sf::Color::Yellow);
-        
-        entities.push_back (dot);
+
+        return dot;
+        // canvas_entities.push_back (dot);
     }
 
     void GL::draw_border (const Point &start, int width, int height) {
 
-        sf::RectangleShape *border  = new sf::RectangleShape (sf::Vector2f (width, height));
-        border->move (start.get_x (), start.get_y ());
+        sf::RectangleShape border (sf::Vector2f (width, height));
+        // sf::RectangleShape *border  = new sf::RectangleShape (sf::Vector2f (width, height));
+        border.move (start.get_x (), start.get_y ());
 
-        border->setFillColor (sf::Color::Black);
-        border->setOutlineThickness(1);
-        border->setOutlineColor(sf::Color::Yellow);
+        border.setFillColor (sf::Color::Black);
+        border.setOutlineThickness(1);
+        border.setOutlineColor(sf::Color::Yellow);
         
-        entities.push_back (border);
+        // entities.push_back (border);
+        window.draw (border);
     }
 
-    void GL::draw_canvas () {
-        for (size_t i = 0; i < entities.size (); ++i)
-            window.draw (*entities[i]);
-    }
+    // void GL::draw_canvas () {
+        
+        // for (size_t i = 0; i < canvas_entities.size (); ++i)
+            // window.draw (*canvas_entities[i]);
+                // 
+    // }
 
-    void GL::change_canvas (int color) {
+
+    void GL::change_background (GLUT::Entity *entity, int color) {
 
     /////////////////////////////////////////////////MAIN
         size_t cnt = 0;
@@ -81,33 +93,42 @@ namespace GLUT {
             }
         }
     /////////////////////////////////////////////////
-        texture_.update (pixels);
-        sprite_->setTexture (texture_);
+        canvas_textures[sprite_index]->update (pixels);
+        dynamic_cast <sf::Sprite *> (entity) -> setTexture (*canvas_textures[sprite_index]);
+        // dynamic_cast <sf::Sprite *> (canvas_entities[sprite_index])->setTexture (*canvas_textures[sprite_index]);
     }
 
 
     void GL::draw_button (Point start, int width, int height, const std::string &texture_path) {
 
-        sf::CircleShape *circle = new sf::CircleShape (width / 2);
-        circle->move (start.get_x (), 
+        // sf::CircleShape *circle = new sf::CircleShape (width / 2);
+        sf::CircleShape circle (width / 2);
+        circle.move (start.get_x (), 
                      start.get_y ());
 
 
-        sf::Texture *texture = new sf::Texture {};
+        sf::Texture *texture = nullptr;
         
+        if (texture_counter >= other_textures.size ()) {
+            texture = new sf::Texture {};
+            other_textures.push_back (texture);
+            texture_counter++;
+        }
+        else {
+            texture = other_textures[texture_counter++];
+        }
+
         if (!texture->loadFromFile (texture_path)) {
             abort ();
         }
-        // texture.setSmooth (true);
 
-        circle->setTexture (texture);
-        // circle.setTextureRect (sf::IntRect (0, 0, width, height));
-        textures.push_back (texture);
+        circle.setTexture (texture);
+        
+        // canvas_textures.push_back (texture);
+        // canvas_entities.push_back (circle);
+        window.draw (circle);
+      }
 
-        entities.push_back (circle);
-  
-        // return *circle;
-    }
 
     void GL::draw_palette_caller (const Point &start, int width, int height, int tool_name) {
 

@@ -5,6 +5,7 @@
 #include "../class_button/button.hpp"
 #include "../class_vector/vector.hpp"
 #include "../class_manager/manager.hpp"
+#include "../store/store.hpp"
 
 class Factory {
 
@@ -23,12 +24,18 @@ class Factory {
         void add_in_parent (Widget *parent, Widget *obj) {
 
             if (parent != nullptr) {
-                ((Manager *) parent)->add (obj);
+                auto manager = dynamic_cast <Manager *> (parent);
+                if (manager != nullptr)
+                    manager->add (obj);
+                else {
+                    logger.log (__PF, CRITICAL, "UNABLE TO CONVERT TO MANAGER");
+                    std::terminate ();
+                }
             }
         }
 
 /////////////////////////////////////////////////MANAGERS
-        Widget * make_manager (Widget *parent) {
+        Widget* make_desktop (Widget *parent) {
             
             Widget *manager = new Manager (parent);
             
@@ -39,23 +46,34 @@ class Factory {
             return manager;
         }
 
-        Widget * make_palette (Widget *parent) {
+        Widget *make_palette (Widget *parent) {
 
             Widget *palette = new Palette (parent);
             add_in_parent (parent, palette);
 
             return palette;
         }
+
+        Widget *make_store (Widget *parent) {
+            Widget *store = new Store (parent);
+            add_in_parent (parent, store);
+            return store;
+        }
+
+        Widget *make_canvas_man (Widget *parent) {
+
+            Widget *canvas_man = new Canvas_Man (parent);
+            add_in_parent (parent, canvas_man);
+
+            return canvas_man;
+        }
+
 /////////////////////////////////////////////////WIDGETS
-        Widget * make_canvas (Coords coords, Widget *parent) {
-            
+        Widget *make_canvas (Coords coords, Widget *parent) {
+
             Widget *canvas = new Canvas (coords, parent);
             
             add_in_parent (parent, canvas);
-            ((Palette *)parent) -> add_canvas (canvas);
-
-            // widgets.push_back (canvas);
-
             return canvas;
         }
 
@@ -76,14 +94,8 @@ class Factory {
 
             add_in_parent (parent, button);
 
-            // widgets.push_back (button);
-
             return button;
         }
-
-    private:
-
-        // vector <Widget*> widgets {};
-};
+    };
 
 #endif

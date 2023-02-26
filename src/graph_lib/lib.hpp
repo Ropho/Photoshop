@@ -7,8 +7,10 @@
 #include "../class_point/point.hpp"
 // #include "../class_tool/tool.hpp"
 
+
 namespace GLUT {
 
+    typedef sf::Drawable Entity;
 
     const int WIDTH  = 1200;
     const int HEIGHT = 800;
@@ -23,7 +25,8 @@ enum EVENTS {
 
 
 enum TOOLS {
-    PENCIL = 1,
+    NO_TOOL = 0,
+    PENCIL  = 1,
 
 };
 
@@ -52,11 +55,14 @@ class GL {
             
             delete[] pixels;
             
-            for (size_t i = 0; i < textures.size (); ++i)
-                delete textures[i];
+            for (size_t i = 0; i < canvas_textures.size (); ++i)
+                delete canvas_textures[i];
 
-            for (size_t i = 0; i < entities.size (); ++i)
-                delete entities[i];
+            // for (size_t i = 0; i < canvas_entities.size (); ++i)
+                // delete canvas_entities[i];
+
+            for (size_t i = 0; i < other_textures.size (); ++i)
+                delete other_textures[i];
         }
 
 
@@ -66,10 +72,6 @@ class GL {
                 HEIGHT_ (HEIGHT)
             {
                 pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
-                texture_.create (WIDTH_, HEIGHT_);
-
-                sprite_ = new sf::Sprite {};
-                entities.push_back (sprite_);
 
                 logger.log (__PF);
             }
@@ -90,17 +92,8 @@ class GL {
         }
 
         void click (int *x, int *y) {
-            
             *x = event.mouseButton.x;
             *y = event.mouseButton.y;
-            // fprintf (stderr, "CURRENT POS \t X: %d \t Y: %d\n", *x, *y);
-
-        }
-
-
-        void refresh () {
-            // window.clear (sf::Color::Black);
-            window.display ();
         }
 
         EVENTS get_event () {
@@ -133,30 +126,41 @@ class GL {
             return line_width_;
         }
 /////////////////////////////////////////////////DRAW
-        void draw_canvas ();
-        void init_canvas (const Coords &coords);
-        void change_canvas (int color);
+        // void draw_canvas ();
+        GLUT::Entity* init_canvas (const Coords &coords);
+        void change_background (GLUT::Entity *entity, int color);
         void draw_color_changer (const Point &start, int width, int height, int color);
         void draw_border (const Point &start, int width, int height);
         void draw_palette_caller (const Point &start, int width, int height, int tool_name);
-        void draw_dot (const Point &pnt);
+        GLUT::Entity* draw_dot (const Point &pnt);
 
         void draw_button (Point start, int width, int height, const std::string &texture_path);
 
+        void clear () {window.clear(sf::Color::Black);}
+        void display () {window.display();}
+        void refresh () {texture_counter = 0;}
+        void draw (GLUT::Entity *entity) {window.draw (*entity);}
     private:
         sf::RenderWindow  window {};
         int WIDTH_  = 0;
         int HEIGHT_ = 0;
         sf::Event   event  {};
         sf::Uint8 *pixels = nullptr;
-        sf::Texture texture_ {};
-        sf::Sprite *sprite_ = nullptr;
+        
+        // sf::Texture texture_ {};
+        // sf::Sprite *sprite_ = nullptr;
         Coords canvas_;
 
         int line_width_ = 1;
 
-        std::vector <sf::Drawable *> entities {};
-        std::vector <sf::Texture *> textures {};
+        // std::vector <sf::Drawable *> canvas_entities {};
+        std::vector <sf::Texture *> canvas_textures {};
+
+        std::vector <sf::Texture *> other_textures {};
+
+        const size_t sprite_index = 0;
+        size_t texture_counter = 0;
+
 };
 
 

@@ -70,8 +70,11 @@
             }
 
             void action () {
-                Cmd <int> cmd (ACTIONS::SET_COLOR, color_);
+                NEW_CMD (ACTIONS::CHANGE_BACKGROUND, INT, this, color_, int);
+                // std::cout << *(static_cast <int *> (cmd.param ()));
+                // Cmd <int> cmd (ACTIONS::CHANGE_BACKGROUND, this, color_);
                 parent_ -> controller (cmd);
+                END_CMD;
             }
 
             void draw () {
@@ -102,13 +105,18 @@
                 
                 if (!active_) {
                     active_ = true;
-                    Cmd <int> cmd (ACTIONS::SET_CURRENT, tool_name_);
+                    NEW_CMD (ACTIONS::SET_CURRENT, INT, this, tool_name_, int);
+                    // Cmd <int> cmd (ACTIONS::SET_CURRENT, static_cast <void *> (this), tool_name_);
                     parent_ -> controller (cmd);
+                    END_CMD;
                 }
                 else {
                     active_ = false;
-                    Cmd <int> cmd (ACTIONS::REMOVE_CURRENT, tool_name_);
+                    NEW_CMD (ACTIONS::REMOVE_CURRENT, INT, this, tool_name_, int);
+
+                    // Cmd <int> cmd (ACTIONS::REMOVE_CURRENT, static_cast <void *> (this), tool_name_);
                     parent_ -> controller (cmd);
+                    END_CMD;
                 }
             }
 
