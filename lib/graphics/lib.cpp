@@ -4,6 +4,25 @@
 
 namespace GLUT {
     
+
+
+    GLUT::Entity* GL::init_background (const GLUT::Color& color) {
+        sf::RectangleShape *rect = new sf::RectangleShape {};
+        rect -> setSize (sf::Vector2f (WIDTH_, HEIGHT_));
+        rect -> setFillColor (GLUT::RED);
+        // sf::Texture *texture = new sf::Texture {};
+        // texture->create (WIDTH_, HEIGHT_);
+        // canvas_textures.push_back (texture);
+
+        // sf::Sprite *sprite = new sf::Sprite {};
+        // // canvas_entities.push_back (sprite);
+
+        // canvas_ = coords;
+        // return sprite;
+        window.draw (*rect);
+        return rect;
+    }
+
     GLUT::Entity* GL::init_canvas (const Coords &coords) {
         
         sf::Texture *texture = new sf::Texture {};
@@ -17,15 +36,14 @@ namespace GLUT {
         return sprite;
     }
 
-    GLUT::Entity* GL::draw_dot (const Point &pnt) {
+    GLUT::Entity* GL::draw_dot (const Point &pnt, const GLUT::Color& color) {
 
         sf::RectangleShape *dot = new sf::RectangleShape (sf::Vector2f (10, 10));
 
         dot->move (pnt.get_x (), pnt.get_y());
-        dot->setFillColor (sf::Color::Red);
+        dot->setFillColor (color);
 
         return dot;
-        // canvas_entities.push_back (dot);
     }
 
     void GL::draw_border (const Point &start, int width, int height) {
@@ -50,7 +68,7 @@ namespace GLUT {
     // }
 
 
-    void GL::change_background (GLUT::Entity *entity, int color) {
+    void GL::change_background (GLUT::Entity *entity, GLUT::Color color) {
 
     /////////////////////////////////////////////////MAIN
         size_t cnt = 0;
@@ -61,34 +79,31 @@ namespace GLUT {
             
             for (int x = -canvas_.width () / 2; x < canvas_.width () / 2; ++x) {
 
-                switch (color) {
+                if (color == GLUT::RED) {
+                    pixels[cnt++] = 255;
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 255;
+                }
 
-                    case GLUT::RED:
-                        pixels[cnt++] = 255;
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 255;
-                    break;
+                else if (color == GLUT::GREEN) {
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 255;
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 255;
+                }
 
-                    case GLUT::GREEN:
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 255;
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 255;
-                    break;
-
-                    case GLUT::BLUE:
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 255;
-                        pixels[cnt++] = 255;
-                    break;
-
-                    default:
-                        pixels[cnt++] = 0;
-                        pixels[cnt++] = 255;
-                        pixels[cnt++] = 128;
-                        pixels[cnt++] = 255;
+                else if (color == GLUT::BLUE) {
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 255;
+                    pixels[cnt++] = 255;
+                }
+                else {
+                    pixels[cnt++] = 0;
+                    pixels[cnt++] = 255;
+                    pixels[cnt++] = 128;
+                    pixels[cnt++] = 255;
                 }
             }
         }
@@ -134,7 +149,7 @@ namespace GLUT {
 
         switch (tool_name) {
             case PENCIL: {
-                    const char *path = "./textures/tools/pencil.png";
+                    const char *path = "./data/textures/tools/pencil.png";
                     draw_button (start, width, height, path);
             }break;
 
@@ -144,29 +159,27 @@ namespace GLUT {
         }
     }
 
-    void GL::draw_color_changer (const Point &start, int width, int height, int color) {
+    void GL::draw_color_changer (const Point &start, int width, int height, GLUT::Color color) {
 
-        switch (color) {
 
-            case RED: {
-                const std::string path = "./textures/buttons/red.png";
+            if (color == RED) {
+                const std::string path = "./data/textures/buttons/red.png";
                 draw_button (start, width, height, path);
-            }break;
-
-            case GREEN: {
-                const std::string path = "./textures/buttons/green.png";
+            }
+            else if (color == GREEN) {
+                const std::string path = "./data/textures/buttons/green.png";
                 draw_button (start, width, height, path);
-            }break;
+            }
 
-            case BLUE: {
-                const std::string path = "./textures/buttons/blue.png";
+            else if (color == BLUE) {
+                const std::string path = "./data/textures/buttons/blue.png";
                 draw_button (start, width, height, path);
-            }break;
+            }
 
-            default:
-                abort ();
-            break;
-        }
+            else {
+                logger.log (__PF, 2);
+                std::terminate ();
+            }
 
         return;
     }

@@ -39,7 +39,7 @@ class Logger {
                 }break;
 
                 case CRITICAL: {
-                    fprintf (out_, "\x1b[31m[INFO] \x1b[92m%s \x1b[31m%s\x1b[0m\n", func_name, message);
+                    fprintf (out_, "\x1b[31m[FATAL] \x1b[92m%s \x1b[31m%s\x1b[0m\n", func_name, message);
                 }break;
 
                 default:

@@ -2,8 +2,8 @@
 #define WIDGET_HPP
 
 
-#include "../class_point/point.hpp"
-#include "../class_cmd/cmd.hpp"
+#include "../../lib/point/point.hpp"
+#include "../../lib/cmd/cmd.hpp"
 
 class Widget {
 
@@ -11,8 +11,17 @@ class Widget {
         Coords coords_ {{0, 0}, 0, 0};
 
         Widget *parent_ = nullptr;
+            
+        bool active_ = false;
 
     public:
+        void deactivate () {
+            active_ = false;
+        }
+        void activate () {
+            active_ = true;
+        }
+
 
         virtual ~Widget () {
             logger.log (__PF);
@@ -50,26 +59,9 @@ class Widget {
             return false;
         }
 
-/////////////////////////////////////////////////FOR MANAGER CLASS
-        // virtual void add (Widget *widget) {};
-        // virtual void clear () {};
-
         virtual void controller (Cmd cmd) {
             std::cout <<"FUCKING HELL\n";
         };
-        // virtual void controller (Cmd <Point> cmd) {
-        //     std::cout <<"FUCKING HELL 2\n";
-        // };
-        // virtual void controller (Cmd <GLUT::Entity *> cmd) {
-        //     std::cout <<"FUCKING HELL 3\n";
-        // };
-        // virtual void controller (Cmd <GLUT::Entity **> cmd) {
-        //     std::cout <<"FUCKING HELL 4\n";
-        // };
-        // virtual void controller (Cmd <nullptr_t> cmd) {
-        //     std::cout <<"FUCKING HELL 5\n";
-        // };
-
 };
 
 

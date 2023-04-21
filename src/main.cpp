@@ -1,6 +1,6 @@
-#include "graph_lib/lib.hpp"
-#include "class_factory/factory.hpp"
-#include "class_tool/tool.hpp"
+#include "../lib/graphics/lib.hpp"
+#include "factory/factory.hpp"
+#include "tool/tool.hpp"
 
 Logger logger {};
 
@@ -10,9 +10,11 @@ int main (void) {
     Factory fac {};
 
 /////////////////////////////////////////////////MANAGERS
-    Widget *desktop = fac.make_desktop (nullptr);
+    Widget *desktop     = fac.make_desktop (nullptr);
+    Widget *background  = fac.make_background (desktop, GLUT::RED);
+
     Widget *palette = fac.make_palette (desktop);
-    Widget *store   = fac.make_store (palette);
+    Widget *store   = fac.make_store   (palette);
 
 /////////////////////////////////////////////////CANVAS
     Widget *canvas_man = fac.make_canvas_man (palette); 
@@ -31,9 +33,23 @@ int main (void) {
     Widget *button_blue = fac.make_color_changer (button_coords, palette, GLUT::BLUE);
 
 // /////////////////////////////////////////////////TOOLS
+    Widget *tool_man = fac.make_tool_man (palette);
+    Coords  pencil_coords (Point {0, gl.width () / 10}, gl.width ()  / 10, gl.width () / 10);
+    Widget *pencil_button = fac.make_pencil (pencil_coords, tool_man);
 
-    Coords pencil_coords (Point {gl.line_width (), gl.width () / 10}, gl.width ()  / 10, gl.width () / 10);
-    Widget *pencil = fac.make_palette_caller (pencil_coords, palette, GLUT::TOOLS::PENCIL);
+    Widget *color_man = fac.make_color_man (tool_man);
+    Coords  color_coords (Point {0, gl.width () / 10 * 3}, gl.width ()  / 10, gl.width () / 10);
+    Widget *color_button = fac.make_color_changer_activator (color_coords, color_man);
+            /////////////////////////////////////
+    Coords  color_coords_1 (Point {gl.width () / 10, gl.width () / 10 * 2}, gl.width ()  / 10, gl.width () / 10);
+    Widget *color_button_1 = fac.make_tool_color_changer (color_coords_1, color_man, GLUT::RED);
+
+    Coords  color_coords_2 (Point {gl.width () / 10, gl.width () / 10 * 3}, gl.width ()  / 10, gl.width () / 10);
+    Widget *color_button_2 = fac.make_tool_color_changer (color_coords_2, color_man, GLUT::GREEN);
+
+    Coords  color_coords_3 (Point {gl.width () / 10, gl.width () / 10 * 4}, gl.width ()  / 10, gl.width () / 10);
+    Widget *color_button_3 = fac.make_tool_color_changer (color_coords_3, color_man, GLUT::BLUE);
+
 /////////////////////////////////////////////////EVENT LOOP
     while (gl.still_open ()) {
 

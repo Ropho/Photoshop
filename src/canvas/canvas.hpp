@@ -2,9 +2,9 @@
 #define CANVAS_HPP
 
 
-#include "../class_widget/widget.hpp"
-#include "../log/log.hpp"
-#include "../graph_lib/lib.hpp"
+#include "../widget/widget.hpp"
+#include "../../lib/log/log.hpp"
+#include "../../lib/graphics/lib.hpp"
 
 
 class Canvas : public Widget {
@@ -21,7 +21,7 @@ class Canvas : public Widget {
             logger.log (__PF);
 
             GLUT::Entity* entity = gl.init_canvas (coords_);
-            std::cerr << "ENTITY " << entity << "\n";
+            // std::cerr << "ENTITY " << entity << "\n";
             // std::cerr << &entity;
             NEW_CMD (ACTIONS::ADD_ENTITY, ENTITY_PTR, this, entity, GLUT::Entity *);
             // cmd.info ();
@@ -38,12 +38,12 @@ class Canvas : public Widget {
         }
 
         void draw  () {
-            logger.log (__PF);
+            // logger.log (__PF);
 
             NEW_CMD (ACTIONS::DRAW_CANVAS, NULLPTR, this, nullptr, nullptr_t);
             // Cmd <nullptr_t> cmd (ACTIONS::DRAW_CANVAS, static_cast <void *> (this));
             parent_ -> controller (cmd);
-            logger.log (__PF);
+            // logger.log (__PF);
 
             END_CMD;
         }
@@ -63,7 +63,7 @@ class Canvas : public Widget {
             return false;
         }
 
-        void change_background (int color) {
+        void change_background (GLUT::Color color) {
             color_ = color;
 
             GLUT::Entity *entity {};
@@ -77,7 +77,7 @@ class Canvas : public Widget {
         }
         
         private:
-            int color_ = GLUT::WHITE;
+            GLUT::Color color_ = GLUT::WHITE;
 };
 
 #endif

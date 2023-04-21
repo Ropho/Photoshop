@@ -4,13 +4,14 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "../log/log.hpp"
-#include "../class_point/point.hpp"
+#include "../point/point.hpp"
 // #include "../class_tool/tool.hpp"
 
 
 namespace GLUT {
 
     typedef sf::Drawable Entity;
+    typedef sf::Color    Color;
 
     const int WIDTH  = 1200;
     const int HEIGHT = 800;
@@ -30,15 +31,10 @@ enum TOOLS {
 
 };
 
-
-enum COLORS {
-
-    BLACK   = 0,
-    RED     = 1,
-    GREEN   = 2,
-    BLUE    = 3,
-    WHITE   = 255,
-};
+static const auto RED   = sf::Color::Red;
+static const auto GREEN = sf::Color::Green;
+static const auto BLUE  = sf::Color::Blue;
+static const auto WHITE = sf::Color::White;
 
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
@@ -126,13 +122,14 @@ class GL {
             return line_width_;
         }
 /////////////////////////////////////////////////DRAW
+        GLUT::Entity* init_background (const GLUT::Color& color);
         // void draw_canvas ();
         GLUT::Entity* init_canvas (const Coords &coords);
-        void change_background (GLUT::Entity *entity, int color);
-        void draw_color_changer (const Point &start, int width, int height, int color);
+        void change_background (GLUT::Entity *entity, GLUT::Color color);
+        void draw_color_changer (const Point &start, int width, int height, GLUT::Color color);
         void draw_border (const Point &start, int width, int height);
         void draw_palette_caller (const Point &start, int width, int height, int tool_name);
-        GLUT::Entity* draw_dot (const Point &pnt);
+        GLUT::Entity* draw_dot (const Point &pnt, const GLUT::Color& color);
 
         void draw_button (Point start, int width, int height, const std::string &texture_path);
 
