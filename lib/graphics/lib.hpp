@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "../log/log.hpp"
+#include "../logger/logger.hpp"
 #include "../point/point.hpp"
 // #include "../class_tool/tool.hpp"
 
@@ -16,7 +16,9 @@ namespace GLUT {
     const int WIDTH  = 1200;
     const int HEIGHT = 800;
     
-enum EVENTS {
+
+    
+enum class EVENTS {
 
     NO_EVENT = 0,
     CLOSE    = 1,
@@ -25,53 +27,60 @@ enum EVENTS {
 };
 
 
-enum TOOLS {
+enum class TOOLS {
     NO_TOOL = 0,
     PENCIL  = 1,
 
 };
 
-static const auto RED   = sf::Color::Red;
-static const auto GREEN = sf::Color::Green;
-static const auto BLUE  = sf::Color::Blue;
-static const auto WHITE = sf::Color::White;
+// namespace Colors {
+//     const auto RED   = sf::Color::Red;
+//     const auto GREEN = sf::Color::Green;
+//     const auto BLUE  = sf::Color::Blue;
+//     const auto WHITE = sf::Color::White;
+// };
 
+
+// INITIALIZAION
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
 class GL {
 
 
 
-    public:
+    protected:
 
          GL () = delete;
         
         ~GL () {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
             
-            delete[] pixels;
+            // delete[] pixels;
             
-            for (size_t i = 0; i < canvas_textures.size (); ++i)
-                delete canvas_textures[i];
+            // for (size_t i = 0; i < canvas_textures.size (); ++i)
+            //     delete canvas_textures[i];
 
-            // for (size_t i = 0; i < canvas_entities.size (); ++i)
-                // delete canvas_entities[i];
+            // // for (size_t i = 0; i < canvas_entities.size (); ++i)
+            //     // delete canvas_entities[i];
 
-            for (size_t i = 0; i < other_textures.size (); ++i)
-                delete other_textures[i];
+            // for (size_t i = 0; i < other_textures.size (); ++i)
+            //     delete other_textures[i];
         }
 
 
-        GL (size_t WIDTH, size_t HEIGHT) :
-                window(sf::VideoMode(WIDTH, HEIGHT), "MAIN WINDOW"),
-                WIDTH_  (WIDTH),
-                HEIGHT_ (HEIGHT)
-            {
-                pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
+        GL (size_t WIDTH, size_t HEIGHT)
+        {
+            Logger::Instance()->log (__PF);
+        }
 
-                logger.log (__PF);
+        public:
+        static GL *Instance () {
+            if (!instance_) {
+                instance_ = new GL (WIDTH, HEIGHT);
             }
 
+            return instance_;
+        }
 
         bool still_open () {
             return window.isOpen();
@@ -97,15 +106,15 @@ class GL {
             switch (event.type) {
                 
                 case sf::Event::Closed:
-                    return CLOSE;
+                    return EVENTS::CLOSE;
                 break;
 
                 case sf::Event::MouseButtonPressed:
-                    return CLICK;
+                    return EVENTS::CLICK;
                 break;
 
                 default:
-                    return NO_EVENT;
+                    return EVENTS::NO_EVENT;
                 break;
             }
         }
@@ -118,52 +127,49 @@ class GL {
             return HEIGHT_;
         }
         
-        int line_width () const {
-            return line_width_;
-        }
-/////////////////////////////////////////////////DRAW
-        GLUT::Entity* init_background (const GLUT::Color& color);
-        // void draw_canvas ();
-        GLUT::Entity* init_canvas (const Coords &coords);
-        void change_background (GLUT::Entity *entity, GLUT::Color color);
-        void draw_color_changer (const Point &start, int width, int height, GLUT::Color color);
-        void draw_border (const Point &start, int width, int height);
-        void draw_palette_caller (const Point &start, int width, int height, int tool_name);
-        GLUT::Entity* draw_dot (const Point &pnt, const GLUT::Color& color);
+        // int line_width () const {
+        //     return line_width_;
+        // }
+/////////////////////////////////////////////////INIT
+        Entity* init_background (const Color& color);
+        Entity* init_canvas (const Coords &coords, GLUT::Color color);
+        Entity* init_border (const Point &start, int width, int height);
+        Entity* init_button (Point start, int width, int height, const std::string &texture_path);
+        Entity* init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color);
+        // void change_background (GLUT::Entity *entity, GLUT::Color color);
+        // void draw_palette_caller (const Point &start, int width, int height, int tool_name);
+        // GLUT::Entity* draw_dot (const Point &pnt, const GLUT::Color& color);
 
-        void draw_button (Point start, int width, int height, const std::string &texture_path);
 
+/////////////////////////////////////////////////
         void clear () {window.clear(sf::Color::Black);}
         void display () {window.display();}
-        void refresh () {texture_counter = 0;}
-        void draw (GLUT::Entity *entity) {window.draw (*entity);}
+        // void refresh () {texture_counter = 0;}
+        void draw (GLUT::Entity *entity);
     private:
-        sf::RenderWindow  window {};
-        int WIDTH_  = 0;
-        int HEIGHT_ = 0;
-        sf::Event   event  {};
-        sf::Uint8 *pixels = nullptr;
-        
-        // sf::Texture texture_ {};
-        // sf::Sprite *sprite_ = nullptr;
-        Coords canvas_;
+        sf::RenderWindow window = sf::RenderWindow (sf::VideoMode (WIDTH, HEIGHT), "MAIN WINDOW");
+        const int WIDTH_ = WIDTH;
+        const int HEIGHT_ = HEIGHT;
+        sf::Event event {};
+        // sf::Uint8 *pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
+        // // sf::Texture texture_ {};
+        // // sf::Sprite *sprite_ = nullptr;
+        // static Coords canvas_;
 
-        int line_width_ = 1;
+        // static int line_width_ = 1;
 
-        // std::vector <sf::Drawable *> canvas_entities {};
-        std::vector <sf::Texture *> canvas_textures {};
+        // // std::vector <sf::Drawable *> canvas_entities {};
+        // std::vector <sf::Texture *> canvas_textures = std::vector <sf::Texture *> {};
+        // std::vector <sf::Texture *> other_textures = std::vector <sf::Texture *> {};
+        std::vector <sf::Texture *> textures {};
 
-        std::vector <sf::Texture *> other_textures {};
+        // static const size_t sprite_index = 0;
+        // size_t texture_counter = 0;
 
-        const size_t sprite_index = 0;
-        size_t texture_counter = 0;
-
+        inline static GL* instance_ = nullptr;
 };
-
-
 }
 
 
-    extern GLUT::GL gl;
 
 #endif

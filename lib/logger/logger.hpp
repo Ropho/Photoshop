@@ -19,14 +19,11 @@ enum MODES {
 class Logger {
 
     public:
-
-
-        Logger (FILE* out = stderr) :
-            out_ (out)
-        {}
-
-        FILE *output_file () {
-            return out_;
+        static Logger *Instance () {
+            if (instance_) {
+                instance_ = new Logger {};
+            }
+            return instance_;
         }
 
         void log (const char *func_name, int mode = INFO, const char *message = nullptr) {
@@ -35,25 +32,30 @@ class Logger {
                 
                 case INFO: {
     // fprintf (stderr, "\x1b[31mFUNC: \x1b[32m%s\x1b[0m\n", func_name);
-                    fprintf (out_, "\x1b[33m[INFO] \x1b[92m%s \x1b[33m%s\x1b[0m\n", func_name, message);
+                    fprintf (stderr, "\x1b[33m[INFO] \x1b[92m%s \x1b[33m%s\x1b[0m\n", func_name, message);
                 }break;
 
                 case CRITICAL: {
-                    fprintf (out_, "\x1b[31m[FATAL] \x1b[92m%s \x1b[31m%s\x1b[0m\n", func_name, message);
+                    fprintf (stderr, "\x1b[31m[FATAL] \x1b[92m%s \x1b[31m%s\x1b[0m\n", func_name, message);
                 }break;
 
                 default:
-                
+                    std::terminate ();
                 break;
             }
         }
 
+    protected:
+        Logger () {
+            log (__PF);
+        }
+        // ~Logger
     private:
-        FILE *out_ = nullptr;
+        inline static Logger *instance_ = nullptr;
 };
 
 
-extern Logger logger;
+// extern Logger logger;
 
 
 #endif

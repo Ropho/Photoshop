@@ -3,8 +3,6 @@
 
 #include "widget.hpp"
 
-namespace background {
-
     class Background : public Widget {
 
     public:
@@ -12,29 +10,23 @@ namespace background {
             Widget (parent),
             color_ (color)
             {
-                logger.log (__PF);
-                GLUT::Entity *entity = gl.init_background (color_);
+                Logger::Instance()->log (__PF);
 
+                drawable_.push_back (GLUT::GL::Instance()->init_background (color_));
+
+                // Add_entity cmd (background, "background", this);
+                // parent -> controller (cmd);
                 // NEW_CMD (ACTIONS::ADD_ENTITY, ENTITY_PTR, this, entity, GLUT::Entity *);
                 // parent_ -> controller (cmd);
                 // END_CMD;
-
-            }
-
-            void draw () {
-                GLUT::Entity *entity = gl.init_background (color_);
-                // gl.draw_background (color_);
             }
 
         bool on_click (int x, int y) override {return false;}
             
         private:
-            GLUT::Color color_ = GLUT::Color::White;
+            GLUT::Color color_;
     };
 
-
-
-};
 
 
 #endif

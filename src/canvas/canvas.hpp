@@ -3,81 +3,48 @@
 
 
 #include "../widget/widget.hpp"
-#include "../../lib/log/log.hpp"
-#include "../../lib/graphics/lib.hpp"
-
 
 class Canvas : public Widget {
 
     public:
 
         ~Canvas () {
-            logger.log (__PF);
+            Logger::Instance()->log(__PF);
         }
 
-        Canvas (Coords coords, Widget *parent) :
-            Widget (coords, parent)
+        Canvas (Coords coords, GLUT::Color color, Widget *parent) :
+            Widget (coords, parent), color_ (color), coords_ (coords)
         {
-            logger.log (__PF);
-
-            GLUT::Entity* entity = gl.init_canvas (coords_);
-            // std::cerr << "ENTITY " << entity << "\n";
-            // std::cerr << &entity;
-            NEW_CMD (ACTIONS::ADD_ENTITY, ENTITY_PTR, this, entity, GLUT::Entity *);
-            // cmd.info ();
-            // Cmd <GLUT::Entity *> cmd (ACTIONS::ADD_ENTITY, static_cast <void *> (this), entity);
-            // Cmd <GLUT::Entity *> cmd (ACTIONS::ADD_CANVAS, static_cast <void *> (this), entity);
-            // cmd.info ();
-            // std::terminate ();
-            parent_ -> controller (cmd);
-            END_CMD;
-            // std::terminate ();
-
-            gl.change_background (entity, color_);
-            logger.log (__PF);
-        }
-
-        void draw  () {
-            // logger.log (__PF);
-
-            NEW_CMD (ACTIONS::DRAW_CANVAS, NULLPTR, this, nullptr, nullptr_t);
-            // Cmd <nullptr_t> cmd (ACTIONS::DRAW_CANVAS, static_cast <void *> (this));
-            parent_ -> controller (cmd);
-            // logger.log (__PF);
-
-            END_CMD;
+            Logger::Instance()->log(__PF);
+            init ();
         }
         
         // void close ();
         // void move  ();
+        void init () override {
+            drawable_.push_back (GLUT::GL::Instance()->init_canvas (coords_, color_));
+        }
+
         bool on_click (int x, int y) {
             if (check_bound (x, y)) {
                 fprintf (stderr, "IN CANVAS!!!!\n");
                 
-                NEW_CMD (ACTIONS::USE_TOOL, POINT, this, Point (x, y), Point);
+                // NEW_CMD (ACTIONS::USE_TOOL, POINT, this, Point (x, y), Point);
                 // Cmd <Point> cmd (ACTIONS::USE_TOOL, static_cast <void *> (this), Point (x, y));
-                parent_ -> controller (cmd);
-                END_CMD;
+                // parent_ -> controller (cmd);
+                // END_CMD;
                 return true;
             }
             return false;
         }
 
-        void change_background (GLUT::Color color) {
+        void set_color (GLUT::Color color) {
             color_ = color;
-
-            GLUT::Entity *entity {};
-
-            NEW_CMD (ACTIONS::GET_ENTITY_CANVAS, ENTITY_PTR_PTR, this, &entity, GLUT::Entity **);
-            // Cmd <GLUT::Entity **> cmd (ACTIONS::GET_ENTITY_CANVAS, static_cast <void *> (this), &entity);
-            parent_ -> controller (cmd);
-            END_CMD;
-
-            gl.change_background (entity, color_);
         }
         
         private:
-            GLUT::Color color_ = GLUT::WHITE;
+            GLUT::Color color_;
+            Coords coords_;
 };
 
 #endif

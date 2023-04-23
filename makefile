@@ -1,13 +1,14 @@
 TARGET = ./bin/prog
 
 CXX 		= 	g++
-CXXFLAGS 	= 	-ggdb3 -std=c++11 -O2 -Wall -Wextra -fpermissive -Wno-array-bounds 								\
+CXXFLAGS 	= 	-ggdb3 -std=c++17 -O2 -Wall -Wextra -fpermissive -Wno-array-bounds 								\
 			  	-no-pie -Wno-narrowing -Wno-unused-parameter -Wno-unused-variable	\
 
 # SRC_DIR		= ./ ./src/class_kernel ./src/class_sys ./src/class_r_vector 
 # BUILD_DIR 	= build
 
-SRC 	= $(wildcard src/*/*.cpp lib/*/*.cpp src/*.cpp)
+# SRC 	= $(wildcard src/*/*.cpp lib/*/*.cpp src/*.cpp)
+SRC 	= $(wildcard src/main.cpp lib/*/*.cpp)
 
 INCLUDE = -lsfml-graphics -lsfml-window -lsfml-system
 

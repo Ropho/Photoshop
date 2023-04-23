@@ -1,7 +1,7 @@
 #ifndef TOOL_HPP
 #define TOOL_HPP
 
-#include "../../lib/log/log.hpp"
+#include "../../lib/logger/logger.hpp"
 #include "../../lib/vector/vector.hpp"
 #include "../../lib/graphics/lib.hpp"
 // #include "../class_widget/widget.hpp"

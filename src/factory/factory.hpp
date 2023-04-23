@@ -1,24 +1,39 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
 
-#include "../canvas/canvas.hpp"
-#include "../button/button.hpp"
+// #include "../canvas/canvas.hpp"
+// #include "../button/button.hpp"
 #include "../../lib/vector/vector.hpp"
-#include "../manager/manager.hpp"
-#include "../store/store.hpp"
 #include "../widget/background.hpp"
+#include "../manager/manager.hpp"
+#include "../manager/palette.hpp"
+#include "../store/store.hpp"
+#include "../manager/canvas.hpp"
+#include "../button/canvas_background_changer.hpp"
 
 class Factory {
 
     public:
+        static Factory *Instance () {
+            if (!instance_) {
+                instance_ = new Factory {};
+            }
+            return instance_;
+        }
+
+    protected:
+        
         Factory () {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
         }
         ~Factory () {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
             // for (size_t i = 0; i < widgets.size (); ++i)
                 // delete widgets[i];
         }
+    
+    public:
+        
         void add_in_parent (Widget *parent, Widget *obj) {
 
             if (parent != nullptr) {
@@ -26,7 +41,7 @@ class Factory {
                 if (manager != nullptr)
                     manager->add (obj);
                 else {
-                    logger.log (__PF, CRITICAL, "UNABLE TO CONVERT TO MANAGER");
+                    Logger::Instance()->log (__PF, CRITICAL, "UNABLE TO CONVERT TO MANAGER");
                     std::terminate ();
                 }
             }
@@ -61,67 +76,72 @@ class Factory {
 
             return canvas_man;
         }
-        Widget *make_tool_man (Widget *parent) {
 
-            Widget *man = new Tool_Man (parent);
-            add_in_parent (parent, man);
+//         Widget *make_tool_man (Widget *parent) {
 
-            return man;
-        }
-        Widget *make_color_man (Widget *parent) {
+//             Widget *man = new Tool_Man (parent);
+//             add_in_parent (parent, man);
 
-            Widget *man = new Color_Man (parent);
-            add_in_parent (parent, man);
+//             return man;
+//         }
+//         Widget *make_color_man (Widget *parent) {
 
-            return man;
-        }
-/////////////////////////////////////////////////WIDGETS
-        Widget *make_canvas (Coords coords, Widget *parent) {
+//             Widget *man = new Color_Man (parent);
+//             add_in_parent (parent, man);
 
-            Widget *canvas = new Canvas (coords, parent);
+//             return man;
+//         }
+// /////////////////////////////////////////////////WIDGETS
+        Widget *make_canvas (Coords coords, GLUT::Color color, Widget *parent) {
+
+            Widget *canvas = new Canvas (coords, color, parent);
             
             add_in_parent (parent, canvas);
             return canvas;
         }
 
-        Widget * make_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_canvas_background_changer (Coords coords, Widget *parent, GLUT::Color color) {
 
-            Widget *button   = new Color_Changer (coords, parent, color);
-            add_in_parent (parent, button);
-
-            return button;
-        }
-        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
-
-            Widget *button   = new Tool_Color_Changer (coords, parent, color);
+            Widget *button   = new Canvas_Background_Changer (coords, parent, color);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget * make_color_changer_activator (Coords coords, Widget *parent) {
+//         Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
 
-            Widget *button   = new Color_Changer_Activator (coords, parent);
-            add_in_parent (parent, button);
+//             Widget *button   = new Tool_Color_Changer (coords, parent, color);
+//             add_in_parent (parent, button);
 
-            return button;
-        }
+//             return button;
+//         }
 
-        Widget *make_pencil (Coords coords, Widget *parent) {
+//         Widget * make_color_changer_activator (Coords coords, Widget *parent) {
 
-            Tool   *tool   = new Pencil;
-            Widget *button = new Tool_Button (coords, parent, tool);
+//             Widget *button   = new Color_Changer_Activator (coords, parent);
+//             add_in_parent (parent, button);
 
-            add_in_parent (parent, button);
+//             return button;
+//         }
 
-            return button;
-        }
+//         Widget *make_pencil (Coords coords, Widget *parent) {
+
+//             Tool   *tool   = new Pencil;
+//             Widget *button = new Tool_Button (coords, parent, tool);
+
+//             add_in_parent (parent, button);
+
+//             return button;
+//         }
         Widget *make_background (Widget *parent, const GLUT::Color& color) {
 
-            Widget *back = new background::Background (parent, color);
+            Widget *back = new Background (parent, color);
             add_in_parent (parent, back);
             return back;
         }
+    
+        private:
+            inline static Factory *instance_ = nullptr;
     };
 
 #endif

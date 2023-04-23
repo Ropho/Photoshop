@@ -3,7 +3,9 @@
 
 
 #include "../../lib/point/point.hpp"
-#include "../../lib/cmd/cmd.hpp"
+#include "../../lib/logger/logger.hpp"
+// #include "../cmd/cmd.hpp"
+#include "vector"
 
 class Widget {
 
@@ -14,6 +16,8 @@ class Widget {
             
         bool active_ = false;
 
+        std::vector <GLUT::Entity *> drawable_ {};
+
     public:
         void deactivate () {
             active_ = false;
@@ -22,27 +26,37 @@ class Widget {
             active_ = true;
         }
 
-
+//////////////////////////////////////CTOR + DTOR
         virtual ~Widget () {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
+            clear ();
+        }
+        
+        virtual void init () {}
+        virtual void clear () {
+            for (size_t i = 0; i < drawable_.size (); i++)
+                delete drawable_[i];
+            drawable_.clear ();
         }
 
         Widget () = default;
-
         Widget (Widget *parent) :
             parent_ (parent)
         {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
         }
-
 
         Widget (Coords coords, Widget *parent) :
             coords_ (coords), parent_ (parent)
         {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
         }
 
-        virtual void draw  () = 0;
+///////////////////////////////////////
+        virtual void draw () {
+            for (size_t i = 0; i < drawable_.size (); i++)
+                GLUT::GL::Instance()->draw (drawable_[i]);
+        }
 
         // virtual void close () = 0;
         // virtual void move  () = 0;
@@ -58,10 +72,6 @@ class Widget {
             }
             return false;
         }
-
-        virtual void controller (Cmd cmd) {
-            std::cout <<"FUCKING HELL\n";
-        };
 };
 
 

@@ -3,11 +3,10 @@
 
 
 #include "../widget/widget.hpp"
-#include "../../lib/log/log.hpp"
-#include "../canvas/canvas.hpp"
-#include "../button/button.hpp"
-#include "../tool/tool.hpp"
-// #include "../../libclass_cmd/cmd.hpp"
+#include "../cmd/cmd.hpp"
+// #include "../canvas/canvas.hpp"
+// #include "../button/button.hpp"
+// #include "../tool/tool.hpp"
 
 
 class Manager : public Widget {
@@ -15,10 +14,12 @@ class Manager : public Widget {
 
         Manager (Widget * parent) :
             Widget (parent)
-            {}
+            {
+                Logger::Instance()->log (__PF);
+            }
 
         virtual ~Manager () {
-            logger.log (__PF);
+            Logger::Instance()->log (__PF);
             for (size_t i = 0; i < arr.size (); ++i)
                 delete arr[i];
         }
@@ -40,405 +41,191 @@ class Manager : public Widget {
                 arr[i]->draw ();
         }
 
-        void send_cmd_down (Cmd cmd) {
-            
+        void send_cmd_down (const Abstract_Cmd &cmd) {
             for (size_t i = 0; i < arr.size (); ++i) {
-                
+            
                 if (cmd.from () != static_cast <void *> (arr[i])) {
-
                     Manager *man = dynamic_cast <Manager *> (arr[i]);
                     if (man != nullptr) {
-                        auto new_cmd = cmd;
-                        new_cmd.set_from (this);
-                        man->controller (new_cmd);
+                        // auto new_cmd = cmd;
+                        // new_cmd.set_from (this);
+                        cmd.set_parent (this);
+                        man -> controller (cmd);
                     }
                 }
             }
         }
 
-        void send_cmd_up (Cmd cmd) {
-                if (cmd.from () != parent_) {
-                    Manager *man = dynamic_cast <Manager *> (parent_);
-                    if (man != nullptr) {
-                            auto new_cmd = cmd;
-                            new_cmd.set_from (this);
-                            man->controller (new_cmd);
-                    }
-                    else {
-                        logger.log (__PF);
-                        std::terminate ();
-                    }
+        void send_cmd_up (const Abstract_Cmd &cmd) {
+            if (cmd.from () != parent_) {
+                Manager *man = dynamic_cast <Manager *> (parent_);
+                if (man != nullptr) {
+                        // auto new_cmd = cmd;
+                        // new_cmd.set_from (this);
+                        cmd.set_parent (this);
+                        man->controller (cmd);
                 }
+                else {
+                    Logger::Instance () -> log (__PF);
+                    std::terminate ();
+                }
+            }
         }
+
+       virtual void controller (const Abstract_Cmd &cmd) {
+            std::cerr << "NOT SUPPOSED TO BE CALLED\n";
+            std::terminate ();
+        };
 
     protected:
         std::vector <Widget *> arr {};
 };
 
 
-class Palette : public Manager {
 
-    public:
+// class Tool_Man : public Manager {
 
-        Palette (Widget *parent) :
-            Manager (parent)
-        {
-            logger.log (__PF);
-        }
+//     public:
 
-        ~Palette () noexcept {
-            logger.log (__PF);
-        }
+//         Tool_Man (Widget *parent) :
+//             Manager (parent)
+//         {
+//             logger.log (__PF);
+//         }
 
-        void controller (Cmd cmd) override {
-            switch (cmd.type ()) {
-                
-                case POINT: {
-                    switch (cmd.action ()) {
+//         ~Tool_Man () noexcept {
+//             logger.log (__PF);
+//         }
 
-                        case ACTIONS::USE_TOOL: {
-                                send_cmd_down (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-
-                }break;
-
-                case COLOR: {
-
-                    switch (cmd.action ()) {
-                        case ACTIONS::CHANGE_BACKGROUND: {
-                                // logger.log (__PF);
-                                send_cmd_down (cmd);
-                            }break;
-                        
-                            default: {
-                            }break;
-                        }
-                    }break;
-
-                case ENTITY_PTR: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::ADD_ENTITY: {
-                            // logger.log (__PF);
-                            // fprintf (stderr, "AFTER \n");
-                            // std::terminate ();
-                            send_cmd_down (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                case ENTITY_PTR_PTR: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::GET_ENTITY_CANVAS: {
-                            
-                            send_cmd_down (cmd);
-                            // logger.log (__PF);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                case NULLPTR: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::DRAW_CANVAS: {
-                            // logger.log (__PF);
-
-                            send_cmd_down (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                default: {
-                }break;
-            }
-        }
-};
-
-
-class Tool_Man : public Manager {
-
-    public:
-
-        Tool_Man (Widget *parent) :
-            Manager (parent)
-        {
-            logger.log (__PF);
-        }
-
-        ~Tool_Man () noexcept {
-            logger.log (__PF);
-        }
-
-        void controller (Cmd cmd) override {
-            switch (cmd.type ()) {
+//         void controller (Cmd cmd) override {
+//             switch (cmd.type ()) {
            
-                case POINT: {
-                    switch (cmd.action ()) {
+//                 case POINT: {
+//                     switch (cmd.action ()) {
 
-                        case ACTIONS::USE_TOOL: {
-                            // logger.log (__PF);
-                            // set_color () {
+//                         case ACTIONS::USE_TOOL: {
 
-                            if (current_action != nullptr) {
+//                             if (current_action != nullptr) {
 
-                                GLUT::Color color;
-                                {
-                                    NEW_CMD (ACTIONS::GET_TOOL_COLOR, COLOR_PTR, this, &color, GLUT::Color *);
-                                    send_cmd_down (cmd);
-                                    END_CMD;
-                                }
-                                current_action->set_color (color);
+//                                 GLUT::Color color;
+//                                 {
+//                                     // NEW_CMD (ACTIONS::GET_TOOL_COLOR, COLOR_PTR, this, &color, GLUT::Color *);
+//                                     // send_cmd_down (cmd);
+//                                     // END_CMD;
+//                                 }
+//                                 current_action->set_color (color);
                                 
-                                current_action->action (cmd.raw ());
-                                add_entities ();
-                            }
+//                                 current_action->action (cmd.raw ());
+//                                 add_entities ();
+//                             }
 
-                        }break;
+//                         }break;
 
-                        default: {
-                        }break;
-                    }
+//                         default: {
+//                         }break;
+//                     }
 
-                }break;
+//                 }break;
            
-                case NULLPTR: {
-                    switch (cmd.action ()) {
+//                 case NULLPTR: {
+//                     switch (cmd.action ()) {
 
-                        case ACTIONS::REMOVE_CURRENT: {
-                            // logger.log (__PF);
-                            current_action = nullptr;
-                        }break;
+//                         case ACTIONS::REMOVE_CURRENT: {
+//                             // logger.log (__PF);
+//                             current_action = nullptr;
+//                         }break;
                     
-                        default: {
-                        }break;
-                    }
-                }break;
+//                         default: {
+//                         }break;
+//                     }
+//                 }break;
             
-                case TOOL_PTR: {
-                    switch (cmd.action ()) {
+//                 case TOOL_PTR: {
+//                     switch (cmd.action ()) {
 
-                        case ACTIONS::SET_CURRENT: {
-                            logger.log (__PF);
-                            Tool* param;
-                            cmd.param (static_cast <void *> (&param));
-                            current_action = param;
-                        }break;
+//                         case ACTIONS::SET_CURRENT: {
+//                             logger.log (__PF);
+//                             Tool* param;
+//                             cmd.param (static_cast <void *> (&param));
+//                             current_action = param;
+//                         }break;
                     
-                        default: {
-                        }break;
-                    }
-                }break;
+//                         default: {
+//                         }break;
+//                     }
+//                 }break;
                 
-                default: {
-                }break;
-            }
-        }
+//                 default: {
+//                 }break;
+//             }
+//         }
 
-        void add_entities () {
-            std::queue <GLUT::Entity *>& entities = current_action->get_entities ();
-            while (entities.size () > 0) {
-                std::cerr << entities.front () << '\n';
-                NEW_CMD (ACTIONS::ADD_ENTITY, ENTITY_PTR, this, entities.front (), GLUT::Entity *);
-                parent_ -> controller (cmd);
-                entities.pop ();
-                END_CMD;     
-            }
-        }
+//         void add_entities () {
+//             std::queue <GLUT::Entity *>& entities = current_action->get_entities ();
+//             while (entities.size () > 0) {
+//                 std::cerr << entities.front () << '\n';
+//                 // NEW_CMD (ACTIONS::ADD_ENTITY, ENTITY_PTR, this, entities.front (), GLUT::Entity *);
+//                 // parent_ -> controller (cmd);
+//                 // entities.pop ();
+//                 // END_CMD;     
+//             }
+//         }
 
-        private:
-            // vector <Tool *> tools {};
-            // std::unordered_map <int, Tool *> map {};
-            Tool *current_action = nullptr;
-            GLUT::Color color_ {};
-};
-
-
-class Color_Man : public Manager {
-
-    public:
-        Color_Man (Widget *parent) :
-            Manager (parent)
-            {
-                logger.log (__PF);
-            }
-
-        ~Color_Man () {
-            logger.log (__PF);
-        }
-
-        void controller (Cmd cmd) override {
-            switch (cmd.action ()) {
-
-                case ACTIONS::ACTIVATE: {
-                    for (size_t i = 0; i < arr.size (); ++i) {
-                        arr[i] -> activate ();
-                    }
-                }break;
-
-                case ACTIONS::DEACTIVATE: {
-                    for (size_t i = 0; i < arr.size (); ++i) {
-                        arr[i] -> deactivate ();
-                    }
-                }break;
-
-                case ACTIONS::CHANGE_TOOL_COLOR: {
-                        GLUT::Color param;
-                        cmd.param (&param);
-                        color_ = param;
-                }break;
-
-                case ACTIONS::GET_TOOL_COLOR: {
-                        GLUT::Color *param;
-                        cmd.param (&param);
-                        *param = color_;
-                }break;
-
-                default:
-                break;
-            }
-        }
-
-        // void add (Widget *entity) {
-        //     if (color_ == nullptr)
-        //         color_ = dynamic_cast <GLUT::Color *> (entity);
-        //     arr.push_back (entity);
-        // }
-
-    private:
-        GLUT::Color color_ = GLUT::RED; 
-};
+//         private:
+//             // vector <Tool *> tools {};
+//             // std::unordered_map <int, Tool *> map {};
+//             Tool *current_action = nullptr;
+//             GLUT::Color color_ {};
+// };
 
 
+// class Color_Man : public Manager {
 
-class Canvas_Man : public Manager {
+//     public:
+//         Color_Man (Widget *parent) :
+//             Manager (parent)
+//             {
+//                 logger.log (__PF);
+//             }
 
-    public:
+//         ~Color_Man () {
+//             logger.log (__PF);
+//         }
 
-        Canvas_Man (Widget *parent) :
-            Manager (parent)
-        {
+//         void controller (Cmd cmd) override {
+//             switch (cmd.action ()) {
 
-            logger.log (__PF);
-        }
+//                 case ACTIONS::ACTIVATE: {
+//                     for (size_t i = 0; i < arr.size (); ++i) {
+//                         arr[i] -> activate ();
+//                     }
+//                 }break;
 
-        ~Canvas_Man () noexcept {
+//                 case ACTIONS::DEACTIVATE: {
+//                     for (size_t i = 0; i < arr.size (); ++i) {
+//                         arr[i] -> deactivate ();
+//                     }
+//                 }break;
 
-            logger.log (__PF);
-        }
+//                 case ACTIONS::CHANGE_TOOL_COLOR: {
+//                         GLUT::Color param;
+//                         cmd.param (&param);
+//                         color_ = param;
+//                 }break;
 
-        void controller (Cmd cmd) override {
-            // cmd.info ();
-            // std::terminate ();
-            switch (cmd.type ()) {
+//                 case ACTIONS::GET_TOOL_COLOR: {
+//                         GLUT::Color *param;
+//                         cmd.param (&param);
+//                         *param = color_;
+//                 }break;
 
-                case COLOR: {
-                    switch (cmd.action ()) {
+//                 default:
+//                 break;
+//             }
+//         }
 
-                    case ACTIONS::CHANGE_BACKGROUND: {
-                            // logger.log (__PF);
-                            
-                            // send_cmd_up <int> (cmd);
-                            GLUT::Color param;
-                            cmd.param (static_cast <void *> (&param));
-                            canvas_->change_background (param);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                case POINT: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::USE_TOOL: {
-                            // logger.log (__PF);
-                                send_cmd_up (cmd);
-                            
-                            // parent_ -> controller (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                case NULLPTR: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::DRAW_CANVAS: {
-                            // logger.log (__PF);
-
-                            send_cmd_up (cmd);
-                            // parent_ -> controller (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-
-                }break;
-
-                case ENTITY_PTR: {
-                    switch (cmd.action ()) {
-
-                        case ACTIONS::ADD_ENTITY: {
-                            // if (cmd.from () != parent_)
-                                send_cmd_up (cmd);
-                            // fprintf (stderr, "CANVAS MAN: %x FROM %x\n", this, cmd.from ());
-                            // logger.log (__PF);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-                }break;
-
-                case ENTITY_PTR_PTR: {
-                    switch (cmd.action ()) {
-                        case ACTIONS::GET_ENTITY_CANVAS: {
-                            
-                            // logger.log (__PF);
-                            send_cmd_up (cmd);
-                        }break;
-
-                        default: {
-                        }break;
-                    }
-
-                }break;
-
-                default:
-                break;
-            }
-        }
-
-        void add (Widget *entity) {
-            if (canvas_ == nullptr)
-                canvas_ = dynamic_cast <Canvas *> (entity);
-            arr.push_back (entity);
-        }
-
-        Widget* canvas () {
-            return canvas_;
-        }
-
-        private:
-            Canvas *canvas_ = nullptr;
-};
+//     private:
+//         GLUT::Color color_ = GLUT::RED; 
+// };
 
 #endif
