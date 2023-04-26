@@ -1,7 +1,5 @@
 #include "lib.hpp"
 
-    // GLUT::GL gl (GLUT::WIDTH, GLUT::HEIGHT);
-
 namespace GLUT {
     
     void GL::draw (Entity *entity) {
@@ -28,24 +26,16 @@ namespace GLUT {
         return rect;
     }
 
-    // void GL::draw_scene () {
-        
-        // for (size_t i = 0; i < canvas_entities.size (); ++i)
-            // window.draw (*canvas_entities[i]);
-                // 
-    // }
-
-
 /////////////////////////////////////////////////BUTTONS
-    // GLUT::Entity* GL::draw_dot (const Point &pnt, const GLUT::Color& color) {
+    GLUT::Entity* GL::init_dot (const Point &pnt, const GLUT::Color& color) {
 
-    //     sf::RectangleShape *dot = new sf::RectangleShape (sf::Vector2f (10, 10));
+        sf::RectangleShape *dot = new sf::RectangleShape (sf::Vector2f (10, 10));
+        dot->move (pnt.get_x (), pnt.get_y());
+        dot->setFillColor (color);
 
-    //     dot->move (pnt.get_x (), pnt.get_y());
-    //     dot->setFillColor (color);
+        return dot;
+    }
 
-    //     return dot;
-    // }
     Entity* GL::init_button (Point start, int width, int height, const std::string &texture_path) {
 
         sf::CircleShape *circle = new sf::CircleShape (width / 2);
@@ -98,51 +88,6 @@ namespace GLUT {
         
         return border;
     }
-
-    // void GL::change_background (GLUT::Entity *entity, GLUT::Color color) {
-
-    // /////////////////////////////////////////////////MAIN
-    //     size_t cnt = 0;
-    //     size_t num_line = canvas_.strt ().get_y ();
-
-    //     for (int y = canvas_.height () / 2; y > - canvas_.height () / 2; --y) {
-    //         cnt = 4 * (num_line++ * WIDTH_ + canvas_.strt ().get_x ());
-            
-    //         for (int x = -canvas_.width () / 2; x < canvas_.width () / 2; ++x) {
-
-    //             if (color == GLUT::RED) {
-    //                 pixels[cnt++] = 255;
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 255;
-    //             }
-
-    //             else if (color == GLUT::GREEN) {
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 255;
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 255;
-    //             }
-
-    //             else if (color == GLUT::BLUE) {
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 255;
-    //                 pixels[cnt++] = 255;
-    //             }
-    //             else {
-    //                 pixels[cnt++] = 0;
-    //                 pixels[cnt++] = 255;
-    //                 pixels[cnt++] = 128;
-    //                 pixels[cnt++] = 255;
-    //             }
-    //         }
-    //     }
-    // /////////////////////////////////////////////////
-    //     canvas_textures[sprite_index]->update (pixels);
-    //     dynamic_cast <sf::Sprite *> (entity) -> setTexture (*canvas_textures[sprite_index]);
-    //     // dynamic_cast <sf::Sprite *> (canvas_entities[sprite_index])->setTexture (*canvas_textures[sprite_index]);
-    // }
 
     // void GL::draw_palette_caller (const Point &start, int width, int height, int tool_name) {
 

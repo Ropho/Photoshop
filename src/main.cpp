@@ -8,7 +8,7 @@ int main (void) {
     Widget *desktop = Factory::Instance()->make_desktop (nullptr);
     Widget *palette = Factory::Instance()->make_palette (desktop);
 
-    Widget *background  = Factory::Instance()->make_background (palette, GLUT::Color::Green);
+    Widget *background  = Factory::Instance()->make_background (palette, GLUT::Color::Yellow);
     // Widget *store   = Factory::Instance()->make_store   (palette);
 
 /////////////////////////////////////////////////CANVAS
@@ -28,22 +28,22 @@ int main (void) {
     Widget *button_blue = Factory::Instance()->make_canvas_background_changer (button_coords, palette, GLUT::Color::Blue);
 
 // // /////////////////////////////////////////////////TOOLS
-//     Widget *tool_man = fac.make_tool_man (palette);
-//     Coords  pencil_coords (Point {0, gl.width () / 10}, gl.width ()  / 10, gl.width () / 10);
-//     Widget *pencil_button = fac.make_pencil (pencil_coords, tool_man);
+    Widget *tool_man = Factory::Instance()->make_tool_man (palette);
+    Coords  pencil_coords (Point {0, GLUT::GL::Instance()->width () / 10}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *pencil_button = Factory::Instance() -> make_pencil (pencil_coords, tool_man, canvas);
 
-//     Widget *color_man = fac.make_color_man (tool_man);
-//     Coords  color_coords (Point {0, gl.width () / 10 * 3}, gl.width ()  / 10, gl.width () / 10);
-//     Widget *color_button = fac.make_color_changer_activator (color_coords, color_man);
+    Widget *color_man = Factory::Instance() -> make_color_man (tool_man);
+    Coords  color_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 3}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *color_button = Factory::Instance() -> make_color_changer_activator (color_coords, color_man, "./data/textures/buttons/blue.png");
 //             /////////////////////////////////////
-//     Coords  color_coords_1 (Point {gl.width () / 10, gl.width () / 10 * 2}, gl.width ()  / 10, gl.width () / 10);
-//     Widget *color_button_1 = fac.make_tool_color_changer (color_coords_1, color_man, GLUT::RED);
+    Coords  color_coords_1 (Point {GLUT::GL::Instance()->width () / 10, GLUT::GL::Instance()->width () / 10 * 2}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *color_button_1 = Factory::Instance ()->make_tool_color_changer (color_coords_1, color_man, GLUT::Color::Red);
 
-//     Coords  color_coords_2 (Point {gl.width () / 10, gl.width () / 10 * 3}, gl.width ()  / 10, gl.width () / 10);
-//     Widget *color_button_2 = fac.make_tool_color_changer (color_coords_2, color_man, GLUT::GREEN);
+    Coords  color_coords_2 (Point {GLUT::GL::Instance()->width () / 10, GLUT::GL::Instance()->width () / 10 * 3}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *color_button_2 = Factory::Instance ()->make_tool_color_changer (color_coords_2, color_man, GLUT::Color::Green);
 
-//     Coords  color_coords_3 (Point {gl.width () / 10, gl.width () / 10 * 4}, gl.width ()  / 10, gl.width () / 10);
-//     Widget *color_button_3 = fac.make_tool_color_changer (color_coords_3, color_man, GLUT::BLUE);
+    Coords  color_coords_3 (Point {GLUT::GL::Instance()->width () / 10, GLUT::GL::Instance()->width () / 10 * 4}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *color_button_3 = Factory::Instance ()->make_tool_color_changer (color_coords_3, color_man, GLUT::Color::Blue);
 
 /////////////////////////////////////////////////EVENT LOOP
     while (GLUT::GL::Instance()->still_open ()) {

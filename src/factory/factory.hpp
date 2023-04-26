@@ -7,9 +7,16 @@
 #include "../widget/background.hpp"
 #include "../manager/manager.hpp"
 #include "../manager/palette.hpp"
+#include "../manager/tool.hpp"
 #include "../store/store.hpp"
 #include "../manager/canvas.hpp"
+#include "../manager/color.hpp"
 #include "../button/canvas_background_changer.hpp"
+#include "../button/color_changer_activator.hpp"
+#include "../button/tool_color_changer.hpp"
+#include "../tool/pencil.hpp"
+#include "../button/tool.hpp"
+
 
 class Factory {
 
@@ -77,20 +84,21 @@ class Factory {
             return canvas_man;
         }
 
-//         Widget *make_tool_man (Widget *parent) {
+        Widget *make_tool_man (Widget *parent) {
 
-//             Widget *man = new Tool_Man (parent);
-//             add_in_parent (parent, man);
+            Widget *man = new Tool_Man (parent);
+            add_in_parent (parent, man);
 
-//             return man;
-//         }
-//         Widget *make_color_man (Widget *parent) {
+            return man;
+        }
 
-//             Widget *man = new Color_Man (parent);
-//             add_in_parent (parent, man);
+        Widget *make_color_man (Widget *parent) {
 
-//             return man;
-//         }
+            Widget *man = new Color_Man (parent);
+            add_in_parent (parent, man);
+
+            return man;
+        }
 // /////////////////////////////////////////////////WIDGETS
         Widget *make_canvas (Coords coords, GLUT::Color color, Widget *parent) {
 
@@ -108,31 +116,38 @@ class Factory {
             return button;
         }
 
-//         Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
 
-//             Widget *button   = new Tool_Color_Changer (coords, parent, color);
-//             add_in_parent (parent, button);
+            Widget *button   = new Tool_Color_Changer (coords, parent, color);
+            add_in_parent (parent, button);
 
-//             return button;
-//         }
+            return button;
+        }
 
-//         Widget * make_color_changer_activator (Coords coords, Widget *parent) {
+        Widget * make_color_changer_activator (Coords coords, Widget *parent, char *texture) {
 
-//             Widget *button   = new Color_Changer_Activator (coords, parent);
-//             add_in_parent (parent, button);
+            Widget *button   = new Color_Changer_Activator (coords, parent, texture);
+            add_in_parent (parent, button);
 
-//             return button;
-//         }
+            return button;
+        }
 
-//         Widget *make_pencil (Coords coords, Widget *parent) {
+        Widget *make_pencil (Coords coords, Widget *parent, Widget* canvas) {
 
-//             Tool   *tool   = new Pencil;
-//             Widget *button = new Tool_Button (coords, parent, tool);
+            
+            if (dynamic_cast <Canvas *> (canvas) == nullptr) {
+                std::terminate ();
+            }
 
-//             add_in_parent (parent, button);
+            Abstract_Tool *tool  = new Pencil (nullptr, canvas);
+            Widget *button = new Tool_Button (coords, parent, tool);
 
-//             return button;
-//         }
+            add_in_parent (parent, button);
+            tool->set_parent (button);
+            
+            return button;
+        }
+
         Widget *make_background (Widget *parent, const GLUT::Color& color) {
 
             Widget *back = new Background (parent, color);

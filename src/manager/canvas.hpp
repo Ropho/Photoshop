@@ -15,10 +15,14 @@ class Canvas_Man : public Manager {
             Logger::Instance()->log(__PF);
         }
 
-        void controller (const Abstract_Cmd &cmd) {
+        void controller (Abstract_Cmd &cmd) {
             switch (cmd.action ()) {
                 case ACTIONS::CHANGE_BACKGROUND:
                     cmd.execute (canvas_);
+                break;
+
+                case ACTIONS::USE_CURRENT_TOOL:
+                    send_cmd_up (cmd);
                 break;
 
                 default:
@@ -122,4 +126,5 @@ class Canvas_Man : public Manager {
 
         private:
             Canvas *canvas_ = nullptr;
+            // unordered_map <>;
 };

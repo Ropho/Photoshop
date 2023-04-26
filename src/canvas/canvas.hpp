@@ -3,6 +3,11 @@
 
 
 #include "../widget/widget.hpp"
+#include "../cmd/use.hpp"
+
+struct Canvas_Param {
+    Point pnt;
+};
 
 class Canvas : public Widget {
 
@@ -13,7 +18,7 @@ class Canvas : public Widget {
         }
 
         Canvas (Coords coords, GLUT::Color color, Widget *parent) :
-            Widget (coords, parent), color_ (color), coords_ (coords)
+            Widget (coords, parent), background_color_ (color), background_coords_ (coords)
         {
             Logger::Instance()->log(__PF);
             init ();
@@ -22,29 +27,41 @@ class Canvas : public Widget {
         // void close ();
         // void move  ();
         void init () override {
-            drawable_.push_back (GLUT::GL::Instance()->init_canvas (coords_, color_));
+            drawable_.push_back (GLUT::GL::Instance()->init_canvas (background_coords_, background_color_));
+        }
+
+        void init_dot (Point pnt, GLUT::Color color) {
+            // std::terminate ();
+            Logger::Instance() -> log (__PF, 1, "INIT DOT");
+            drawable_.push_back (GLUT::GL::Instance ()-> init_dot (pnt, color));
         }
 
         bool on_click (int x, int y) {
             if (check_bound (x, y)) {
                 fprintf (stderr, "IN CANVAS!!!!\n");
                 
-                // NEW_CMD (ACTIONS::USE_TOOL, POINT, this, Point (x, y), Point);
-                // Cmd <Point> cmd (ACTIONS::USE_TOOL, static_cast <void *> (this), Point (x, y));
-                // parent_ -> controller (cmd);
-                // END_CMD;
+                Canvas_Param *param = new Canvas_Param;
+                param->pnt = Point (x, y);
+
+                Use_Current_Tool cmd (this, param);
+                
+                Manager *man = dynamic_cast <Manager *> (parent_); 
+                man -> controller (cmd);
+
+                delete param;
+
                 return true;
             }
             return false;
         }
 
         void set_color (GLUT::Color color) {
-            color_ = color;
+            background_color_ = color;
         }
         
         private:
-            GLUT::Color color_;
-            Coords coords_;
+            GLUT::Color background_color_;
+            Coords background_coords_;
 };
 
 #endif

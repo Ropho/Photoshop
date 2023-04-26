@@ -1,4 +1,4 @@
-#include "manager.hpp"
+// #include "manager.hpp"
 
 
 class Palette : public Manager {
@@ -15,12 +15,16 @@ class Palette : public Manager {
             Logger::Instance()->log (__PF);
         }
 
-        void controller (const Abstract_Cmd &cmd) override {
+        void controller (Abstract_Cmd &cmd) override {
             Logger::Instance()->log (__PF);
 
             switch (cmd.action ()) {
 
                 case ACTIONS::CHANGE_BACKGROUND :
+                    send_cmd_down (cmd);
+                break;
+
+                case ACTIONS::USE_CURRENT_TOOL:
                     send_cmd_down (cmd);
                 break;
 

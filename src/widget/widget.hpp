@@ -2,10 +2,10 @@
 #define WIDGET_HPP
 
 
-#include "../../lib/point/point.hpp"
-#include "../../lib/logger/logger.hpp"
+// #include "../../lib/point/point.hpp"
 // #include "../cmd/cmd.hpp"
-#include "vector"
+// #include "../../lib/graphics/lib.hpp"
+// #include <vector>
 
 class Widget {
 

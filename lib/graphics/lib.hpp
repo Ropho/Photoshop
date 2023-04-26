@@ -33,20 +33,9 @@ enum class TOOLS {
 
 };
 
-// namespace Colors {
-//     const auto RED   = sf::Color::Red;
-//     const auto GREEN = sf::Color::Green;
-//     const auto BLUE  = sf::Color::Blue;
-//     const auto WHITE = sf::Color::White;
-// };
-
-
-// INITIALIZAION
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
 class GL {
-
-
 
     protected:
 
@@ -136,9 +125,9 @@ class GL {
         Entity* init_border (const Point &start, int width, int height);
         Entity* init_button (Point start, int width, int height, const std::string &texture_path);
         Entity* init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color);
+        GLUT::Entity* init_dot (const Point &pnt, const GLUT::Color& color);
         // void change_background (GLUT::Entity *entity, GLUT::Color color);
         // void draw_palette_caller (const Point &start, int width, int height, int tool_name);
-        // GLUT::Entity* draw_dot (const Point &pnt, const GLUT::Color& color);
 
 
 /////////////////////////////////////////////////

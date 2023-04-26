@@ -8,7 +8,7 @@ class Change_Canvas_Background : public Abstract_Cmd {
 
     public:
         Change_Canvas_Background (void *parent, GLUT::Color color) :
-            Abstract_Cmd (parent, ACTIONS::CHANGE_BACKGROUND), color_ (color)
+            Abstract_Cmd (parent, ACTIONS::CHANGE_BACKGROUND, nullptr), color_ (color)
         {
             Logger::Instance()->log (__PF);
 
