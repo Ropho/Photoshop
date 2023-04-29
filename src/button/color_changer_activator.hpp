@@ -11,17 +11,20 @@
                 Abstract_Button (coords, ptr, texture_path)
             {
                 Logger::Instance () -> log (__PF);
-
-                drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_button (coords_.strt (), coords_.width (), coords_.height (), 
-                                    Abstract_Button::texture_path ()));
+                init ();
             }
 
+            void init () override {
+                entities_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
+                entities_.push_back (GLUT::GL::Instance()->init_button (coords_.strt (), coords_.width (), coords_.height (), 
+                                    Abstract_Button::texture_path ()));
+            }
+            
             ~Color_Changer_Activator () {
                 Logger::Instance () -> log (__PF);
             }
 
-            void action () {
+            void action_on_mouse_press () override {
                 Logger::Instance () -> log (__PF);
 
                 if (!active_) {
@@ -44,6 +47,7 @@
                     }
                 }
             }
+            void action_on_mouse_release () override {}
     };
 
 #endif

@@ -12,13 +12,21 @@
             {
                 Logger::Instance()->log (__PF);
 
-                drawable_.push_back (GLUT::GL::Instance()->init_background (color_));
+                init ();
             }
 
-        bool on_click (int x, int y) override {return false;}
-            
+        void init () override {
+            background_ = (GLUT::GL::Instance()->init_background (color_));
+            entities_.push_back (background_);
+        }
+
+        bool on_mouse_release (int x, int y) override {return false;}
+        bool on_mouse_press (int x, int y) override {return false;}
+        bool on_mouse_move  (int x, int y) override {return false;}
+
         private:
             GLUT::Color color_;
+            GLUT::Entity background_;
     };
 
 

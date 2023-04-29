@@ -32,6 +32,10 @@ int main (void) {
     Coords  pencil_coords (Point {0, GLUT::GL::Instance()->width () / 10}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
     Widget *pencil_button = Factory::Instance() -> make_pencil (pencil_coords, tool_man, canvas, "./data/textures/tools/pencil.png");
 
+    Coords  eraser_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 2}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Widget *eraser_button = Factory::Instance() -> make_eraser (eraser_coords, tool_man, canvas, "./data/textures/tools/eraser.png");
+
+/////////////////////////////////////////////////
     Widget *color_man = Factory::Instance() -> make_color_man (tool_man);
     Coords  color_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 3}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
     Widget *color_button = Factory::Instance() -> make_color_changer_activator (color_coords, color_man, "./data/textures/tools/colors.png");
@@ -56,16 +60,35 @@ int main (void) {
                     GLUT::GL::Instance()->close ();
                 } break;
 
-                case GLUT::EVENTS::CLICK: {
+                case GLUT::EVENTS::MOUSE_PRESS: {
                     int x = 0;
                     int y = 0;
 
-                    GLUT::GL::Instance()->click (&x, &y);
+                    GLUT::GL::Instance()-> mouse_press (&x, &y);
         
-                    desktop->on_click (x, y);
+                    desktop->on_mouse_press (x, y);
+                } break;
+
+                case GLUT::EVENTS::MOUSE_RELEASE: {
+                    int x = 0;
+                    int y = 0;
+
+                    GLUT::GL::Instance()-> mouse_release (&x, &y);
+        
+                    desktop->on_mouse_release (x, y);
+                } break;
+
+                case GLUT::EVENTS::MOUSE_MOVE: {
+                    int x = 0;
+                    int y = 0;
+
+                    GLUT::GL::Instance()-> mouse_move (&x, &y);
+        
+                    desktop->on_mouse_move (x, y);
                 } break;
 
                 default: {
+
                 } break;
 
             }

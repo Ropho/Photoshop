@@ -1,13 +1,13 @@
-#ifndef PENCIL_HPP
-#define PENCIL_HPP
+#ifndef ERASER_HPP
+#define ERASER_HPP
 
 #include "tool.hpp"
 #include "../widget/canvas.hpp"
 
-class Pencil : public Abstract_Tool {
+class Eraser : public Abstract_Tool {
 
     public:
-        Pencil (Widget *parent, Widget *use_instance) :
+        Eraser (Widget *parent, Widget *use_instance) :
             Abstract_Tool (parent, TOOLS::PENCIL, use_instance)
         {
             Logger::Instance() -> log (__PF);
@@ -17,7 +17,7 @@ class Pencil : public Abstract_Tool {
             }
         }
 
-        ~Pencil () {
+        ~Eraser () {
             Logger::Instance() -> log (__PF);
         }
 
@@ -28,16 +28,12 @@ class Pencil : public Abstract_Tool {
 
         void start_action (void *param) override {
             Logger::Instance() -> log (__PF);
-            
             mouse_button_press ();
-
             action (param);
         }
+        void action (void *param) override {
 
-        void action (void *param) {
-            
             if (mouse_button_pressed ()) {
-
                 set_param (param);
                 
                 Canvas *canvas = dynamic_cast <Canvas *> (use_instance_);
@@ -47,14 +43,19 @@ class Pencil : public Abstract_Tool {
                     std::terminate ();
                 } 
 
-                canvas -> init_dot (pnt_, color_);
+                std::vector <GLUT::Entity> &entities = canvas -> get_entities ();
+                
+                for (int i = entities.size () - 1; i >= 0; i--) {            
+                    if (entities[i].info.contains (pnt_.get_x (), pnt_.get_y ())) {
+                        entities.erase (entities.begin () + i);
+                        break;
+                    }                
+                }
                 
             }
         }
-        void end_action (void *param) override {
-            mouse_button_release ();
-        }
-
+        void end_action (void *param) override {}
+ 
     private:
         Point pnt_;
 };

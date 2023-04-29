@@ -1,14 +1,12 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
 
-// #include "../canvas/canvas.hpp"
 // #include "../button/button.hpp"
 #include "../../lib/vector/vector.hpp"
 #include "../widget/background.hpp"
 #include "../manager/manager.hpp"
 #include "../manager/palette.hpp"
 #include "../manager/tool.hpp"
-#include "../store/store.hpp"
 #include "../manager/canvas.hpp"
 #include "../manager/color.hpp"
 #include "../button/canvas_background_changer.hpp"
@@ -16,6 +14,7 @@
 #include "../button/tool_color_changer.hpp"
 #include "../tool/pencil.hpp"
 #include "../button/tool.hpp"
+#include "../tool/eraser.hpp"
 
 
 class Factory {
@@ -70,11 +69,11 @@ class Factory {
             return palette;
         }
 
-        Widget *make_store (Widget *parent) {
-            Widget *store = new Store (parent);
-            add_in_parent (parent, store);
-            return store;
-        }
+        // Widget *make_store (Widget *parent) {
+        //     Widget *store = new Store (parent);
+        //     add_in_parent (parent, store);
+        //     return store;
+        // }
 
         Widget *make_canvas_man (Widget *parent) {
 
@@ -140,6 +139,22 @@ class Factory {
             }
 
             Abstract_Tool *tool  = new Pencil (nullptr, canvas);
+            Widget *button = new Tool_Button (coords, parent, tool, texture_path);
+
+            add_in_parent (parent, button);
+            tool->set_parent (button);
+            
+            return button;
+        }
+
+        Widget *make_eraser (Coords coords, Widget *parent, Widget* canvas, const std::string& texture_path) {
+
+            
+            if (dynamic_cast <Canvas *> (canvas) == nullptr) {
+                std::terminate ();
+            }
+
+            Abstract_Tool *tool  = new Eraser (nullptr, canvas);
             Widget *button = new Tool_Button (coords, parent, tool, texture_path);
 
             add_in_parent (parent, button);

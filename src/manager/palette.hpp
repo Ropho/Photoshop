@@ -24,7 +24,15 @@ class Palette : public Manager {
                     send_cmd_down (cmd);
                 break;
 
+                case ACTIONS::START_USE_CURRENT_TOOL:
+                    send_cmd_down (cmd);
+                break;
+
                 case ACTIONS::USE_CURRENT_TOOL:
+                    send_cmd_down (cmd);
+                break;
+
+                case ACTIONS::END_USE_CURRENT_TOOL:
                     send_cmd_down (cmd);
                 break;
 

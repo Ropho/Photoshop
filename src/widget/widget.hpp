@@ -15,17 +15,18 @@ class Widget {
         Widget *parent_ = nullptr;
             
         bool active_ = false;
-
-        std::vector <GLUT::Entity *> drawable_ {};
+    
+        std::vector <GLUT::Entity> entities_ {};
 
     public:
+        std::vector <GLUT::Entity> &get_entities () {return entities_;}
+        
         void deactivate () {
             active_ = false;
         }
         void activate () {
             active_ = true;
         }
-
 //////////////////////////////////////CTOR + DTOR
         virtual ~Widget () {
             Logger::Instance()->log (__PF);
@@ -34,9 +35,9 @@ class Widget {
         
         virtual void init () {}
         virtual void clear () {
-            for (size_t i = 0; i < drawable_.size (); i++)
-                delete drawable_[i];
-            drawable_.clear ();
+            // for (size_t i = 0; i < drawable_.size (); i++)
+                // delete drawable_[i];
+            entities_.clear ();
         }
 
         Widget () = default;
@@ -54,15 +55,17 @@ class Widget {
 
 ///////////////////////////////////////
         virtual void draw () {
-            for (size_t i = 0; i < drawable_.size (); i++)
-                GLUT::GL::Instance()->draw (drawable_[i]);
+            for (size_t i = 0; i < entities_.size (); i++)
+                GLUT::GL::Instance()->draw (entities_[i].drawable);
         }
 
         // virtual void close () = 0;
         // virtual void move  () = 0;
-        virtual bool on_click (int x, int y) = 0;
+        virtual bool on_mouse_release  (int x, int y) = 0;
+        virtual bool on_mouse_press  (int x, int y) = 0;
+        virtual bool on_mouse_move   (int x, int y) = 0;
+
         // virtual void on_press () = 0;
-        
         
         bool check_bound (int x, int y) {
             

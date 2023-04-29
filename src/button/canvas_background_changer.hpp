@@ -13,9 +13,12 @@
                 color_  (color)
             {
                 Logger::Instance ()->log (__PF);
+                init ();
+            }
 
-                drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_, 
+            void init () override {
+                entities_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
+                entities_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_, 
                                     Abstract_Button::texture_path ()));
             }
 
@@ -23,13 +26,14 @@
                 Logger::Instance ()->log (__PF);
             }
 
-            void action () override {
+            void action_on_mouse_press () override {
                 Logger::Instance ()->log (__PF);
                 Change_Canvas_Background cmd (this, color_);
                 
                 Manager *caller = dynamic_cast <Manager *> (parent_);
                 caller -> controller (cmd);
             }            
+            void action_on_mouse_release () override {}
 
         private:
             GLUT::Color color_;

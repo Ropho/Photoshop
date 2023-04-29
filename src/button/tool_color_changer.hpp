@@ -11,16 +11,20 @@
                 color_  (color)
             {
                 Logger::Instance () -> log (__PF);
-                drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_,
+                init ();
+            }
+
+            void init () override {
+                entities_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
+                entities_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_,
                                     Abstract_Button::texture_path ()));
             }
 
-            ~Tool_Color_Changer () {
+            ~Tool_Color_Changer () override {
                 Logger::Instance () -> log (__PF);
             }
 
-            void action () {
+            void action_on_mouse_press () {
                 Logger::Instance () -> log (__PF);
                 
                 Set_Tool_Color cmd (this, color_);
@@ -36,6 +40,7 @@
                 // NEW_CMD (ACTIONS::CHANGE_TOOL_COLOR, COLOR, this, color_, GLUT::Color);
                 // END_CMD;
             }
+            void action_on_mouse_release () override {}
 
             void draw () override {
                 if (active_) {

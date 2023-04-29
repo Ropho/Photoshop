@@ -10,15 +10,16 @@
 
 namespace GLUT {
 
-    typedef sf::Drawable Entity;
+    // typedef sf::Drawable Entity;
 
+    typedef sf::Drawable Drawable;
     typedef sf::Color    Color;
     typedef sf::FloatRect Info;
 
-    struct Entity_New {
-        Entity* drawable;
+    typedef struct Entity {
+        Drawable* drawable;
         Info info;
-    };
+    } Entity;
 
     const int WIDTH  = 1200;
     const int HEIGHT = 800;
@@ -27,18 +28,19 @@ namespace GLUT {
     
 enum class EVENTS {
 
-    NO_EVENT = 0,
-    CLOSE    = 1,
-    CLICK    = 2,
-
+    NO_EVENT            = 0,
+    CLOSE               = 1,
+    MOUSE_PRESS         = 2,
+    MOUSE_RELEASE         = 3,
+    MOUSE_MOVE          = 4,
 };
 
 
-enum class TOOLS {
-    NO_TOOL = 0,
-    PENCIL  = 1,
+// enum class TOOLS {
+//     NO_TOOL = 0,
+//     PENCIL  = 1,
 
-};
+// };
 
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
@@ -92,9 +94,17 @@ class GL {
             window.close();
         }
 
-        void click (int *x, int *y) {
+        void mouse_press (int *x, int *y) {
             *x = event.mouseButton.x;
             *y = event.mouseButton.y;
+        }
+        void mouse_release (int *x, int *y) {
+            *x = event.mouseButton.x;
+            *y = event.mouseButton.y;
+        }
+        void mouse_move (int *x, int *y) {
+            *x = event.mouseMove.x;
+            *y = event.mouseMove.y;
         }
 
         EVENTS get_event () {
@@ -106,7 +116,15 @@ class GL {
                 break;
 
                 case sf::Event::MouseButtonPressed:
-                    return EVENTS::CLICK;
+                    return EVENTS::MOUSE_PRESS;
+                break;
+
+                case sf::Event::MouseButtonReleased:
+                    return EVENTS::MOUSE_RELEASE;
+                break;
+
+                case sf::Event::MouseMoved:
+                    return EVENTS::MOUSE_MOVE;
                 break;
 
                 default:
@@ -127,12 +145,12 @@ class GL {
         //     return line_width_;
         // }
 /////////////////////////////////////////////////INIT
-        Entity* init_background (const Color& color);
-        Entity* init_canvas (const Coords &coords, GLUT::Color color);
-        Entity* init_border (const Point &start, int width, int height);
-        Entity* init_button (Point start, int width, int height, const std::string &texture_path);
-        Entity* init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color, const std::string& texture_path);
-        GLUT::Entity* init_dot (const Point &pnt, const GLUT::Color& color);
+        Entity init_background (const Color& color);
+        Entity init_canvas (const Coords &coords, GLUT::Color color);
+        Entity init_border (const Point &start, int width, int height);
+        Entity init_button (Point start, int width, int height, const std::string &texture_path);
+        Entity init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color, const std::string& texture_path);
+        Entity init_dot (const Point &pnt, const GLUT::Color& color);
         // void change_background (GLUT::Entity *entity, GLUT::Color color);
         // void draw_palette_caller (const Point &start, int width, int height, int tool_name);
 
@@ -141,7 +159,7 @@ class GL {
         void clear () {window.clear(sf::Color::Black);}
         void display () {window.display();}
         // void refresh () {texture_counter = 0;}
-        void draw (GLUT::Entity *entity);
+        void draw (GLUT::Drawable *entity);
     private:
         sf::RenderWindow window = sf::RenderWindow (sf::VideoMode (WIDTH, HEIGHT), "MAIN WINDOW");
         const int WIDTH_ = WIDTH;

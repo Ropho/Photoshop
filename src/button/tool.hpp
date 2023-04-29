@@ -11,8 +11,12 @@
                 tool_ (tool)
             {
                 Logger::Instance () -> log (__PF);
-                drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), GLUT::Color::Red,
+                init ();
+            }
+
+            void init () override {
+                entities_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
+                entities_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), GLUT::Color::Red,
                                     Abstract_Button::texture_path ()));
             }
 
@@ -21,7 +25,7 @@
                 delete tool_;
             }
 
-            void action () override {
+            void action_on_mouse_press () override {
                 if (!active_) {
                 Logger::Instance () -> log (__PF);
                     active_ = true;
@@ -33,9 +37,6 @@
                     }
                     man -> controller (cmd);
 
-                    // NEW_CMD (ACTIONS::SET_CURRENT, TOOL_PTR, this, tool_, Tool*);
-                    // parent_ -> controller (cmd);
-                    // END_CMD;
                 }
                 else {
                     active_ = false;
@@ -47,9 +48,11 @@
                         std::terminate ();
                     }
                     man -> controller (cmd);
-                    // END_CMD;
                 }
             }
+
+            void action_on_mouse_release () override {}
+
         protected:
             Abstract_Tool *tool_ = nullptr;
     };
