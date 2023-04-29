@@ -7,13 +7,14 @@
     class Color_Changer_Activator : public Abstract_Button {
 
         public:
-            Color_Changer_Activator (Coords coords, Widget* ptr, char *texture) :
-                Abstract_Button (coords, ptr)
+            Color_Changer_Activator (Coords coords, Widget* ptr, const std::string &texture_path) :
+                Abstract_Button (coords, ptr, texture_path)
             {
                 Logger::Instance () -> log (__PF);
 
                 drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_button (coords_.strt (), coords_.width (), coords_.height (), texture));
+                drawable_.push_back (GLUT::GL::Instance()->init_button (coords_.strt (), coords_.width (), coords_.height (), 
+                                    Abstract_Button::texture_path ()));
             }
 
             ~Color_Changer_Activator () {

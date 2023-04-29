@@ -24,15 +24,12 @@ class Canvas : public Widget {
             init ();
         }
         
-        // void close ();
-        // void move  ();
         void init () override {
             drawable_.push_back (GLUT::GL::Instance()->init_canvas (background_coords_, background_color_));
         }
 
         void init_dot (Point pnt, GLUT::Color color) {
-            // std::terminate ();
-            Logger::Instance() -> log (__PF, 1, "INIT DOT");
+            Logger::Instance() -> log (__PF);
             drawable_.push_back (GLUT::GL::Instance ()-> init_dot (pnt, color));
         }
 

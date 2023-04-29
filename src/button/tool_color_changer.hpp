@@ -6,13 +6,14 @@
 
     class Tool_Color_Changer : public Abstract_Button {
         public:
-            Tool_Color_Changer (Coords coords, Widget* ptr, GLUT::Color color) :
-                Abstract_Button (coords, ptr),
+            Tool_Color_Changer (Coords coords, Widget* ptr, GLUT::Color color, const std::string &texture_path) :
+                Abstract_Button (coords, ptr, texture_path),
                 color_  (color)
             {
                 Logger::Instance () -> log (__PF);
                 drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_));
+                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), color_,
+                                    Abstract_Button::texture_path ()));
             }
 
             ~Tool_Color_Changer () {

@@ -6,13 +6,14 @@
     class Tool_Button : public Abstract_Button {
 
         public:
-            Tool_Button (Coords coords, Widget* ptr, Abstract_Tool* tool) :
-                Abstract_Button (coords, ptr), 
+            Tool_Button (Coords coords, Widget* ptr, Abstract_Tool* tool, const std::string &texture_path) :
+                Abstract_Button (coords, ptr, texture_path), 
                 tool_ (tool)
             {
                 Logger::Instance () -> log (__PF);
                 drawable_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), GLUT::Color::Red));
+                drawable_.push_back (GLUT::GL::Instance()->init_canvas_background_changer (coords_.strt (), coords_.width (), coords_.height (), GLUT::Color::Red,
+                                    Abstract_Button::texture_path ()));
             }
 
             ~Tool_Button () {

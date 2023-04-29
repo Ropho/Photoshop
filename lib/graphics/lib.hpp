@@ -11,7 +11,14 @@
 namespace GLUT {
 
     typedef sf::Drawable Entity;
+
     typedef sf::Color    Color;
+    typedef sf::FloatRect Info;
+
+    struct Entity_New {
+        Entity* drawable;
+        Info info;
+    };
 
     const int WIDTH  = 1200;
     const int HEIGHT = 800;
@@ -124,7 +131,7 @@ class GL {
         Entity* init_canvas (const Coords &coords, GLUT::Color color);
         Entity* init_border (const Point &start, int width, int height);
         Entity* init_button (Point start, int width, int height, const std::string &texture_path);
-        Entity* init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color);
+        Entity* init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color, const std::string& texture_path);
         GLUT::Entity* init_dot (const Point &pnt, const GLUT::Color& color);
         // void change_background (GLUT::Entity *entity, GLUT::Color color);
         // void draw_palette_caller (const Point &start, int width, int height, int tool_name);

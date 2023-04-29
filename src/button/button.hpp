@@ -8,8 +8,8 @@
 
         public:
 
-            Abstract_Button (Coords coords, Widget *parent) :
-                Widget (coords, parent)
+            Abstract_Button (Coords coords, Widget *parent, const std::string &texture_path) :
+                Widget (coords, parent), texture_path_ (texture_path)
             {
                 Logger::Instance ()->log (__PF);
             }
@@ -28,5 +28,15 @@
 
                 return false;
             }
+
+            std::string& texture_path () {
+                return texture_path_;
+            }
+            void set_texture_path (const std::string &texture_path) {
+                texture_path_ = texture_path;
+            }
+
+        protected:
+            std::string texture_path_;
     };
 #endif

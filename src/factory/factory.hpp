@@ -108,31 +108,31 @@ class Factory {
             return canvas;
         }
 
-        Widget * make_canvas_background_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_canvas_background_changer (Coords coords, Widget *parent, GLUT::Color color, const std::string& texture_path) {
 
-            Widget *button   = new Canvas_Background_Changer (coords, parent, color);
+            Widget *button   = new Canvas_Background_Changer (coords, parent, color, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color, const std::string& texture_path) {
 
-            Widget *button   = new Tool_Color_Changer (coords, parent, color);
+            Widget *button   = new Tool_Color_Changer (coords, parent, color, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget * make_color_changer_activator (Coords coords, Widget *parent, char *texture) {
+        Widget * make_color_changer_activator (Coords coords, Widget *parent, const std::string& texture_path) {
 
-            Widget *button   = new Color_Changer_Activator (coords, parent, texture);
+            Widget *button   = new Color_Changer_Activator (coords, parent, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget *make_pencil (Coords coords, Widget *parent, Widget* canvas) {
+        Widget *make_pencil (Coords coords, Widget *parent, Widget* canvas, const std::string& texture_path) {
 
             
             if (dynamic_cast <Canvas *> (canvas) == nullptr) {
@@ -140,7 +140,7 @@ class Factory {
             }
 
             Abstract_Tool *tool  = new Pencil (nullptr, canvas);
-            Widget *button = new Tool_Button (coords, parent, tool);
+            Widget *button = new Tool_Button (coords, parent, tool, texture_path);
 
             add_in_parent (parent, button);
             tool->set_parent (button);

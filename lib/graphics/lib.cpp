@@ -57,24 +57,8 @@ namespace GLUT {
         return circle;
     }
 
-    Entity* GL::init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color) {
-
-        if (color == Color::Red) {
-            const std::string path = "./data/textures/buttons/red.png";
-            return init_button (start, width, height, path);
-        }
-        else if (color == Color::Green) {
-            const std::string path = "./data/textures/buttons/green.png";
-            return init_button (start, width, height, path);
-        }
-        else if (color == Color::Blue) {
-            const std::string path = "./data/textures/buttons/blue.png";
-            return init_button (start, width, height, path);
-        }
-        else {
-            Logger::Instance()->log (__PF, 2);
-            std::terminate ();
-        }
+    Entity* GL::init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color, const std::string& texture_path) {
+        return init_button (start, width, height, texture_path);
     }
 
     Entity* GL::init_border (const Point &start, int width, int height) {
