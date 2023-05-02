@@ -33,6 +33,14 @@ class Canvas_Man : public Manager {
                     send_cmd_up (cmd);
                 break;
 
+                case ACTIONS::SAVE_TO_FILE:
+                    cmd.execute (canvas_);
+                break;
+
+                case ACTIONS::RETRIEVE_FROM_FILE:
+                    cmd.execute (canvas_);
+                break;
+                
                 default:
                 break;
             }

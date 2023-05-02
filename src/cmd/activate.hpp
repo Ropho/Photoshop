@@ -55,4 +55,5 @@ class Deactivate : public Abstract_Cmd {
             man -> deactivate ();
         }
 };
+
 #endif

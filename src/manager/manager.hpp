@@ -50,6 +50,14 @@ class Manager : public Widget {
             return false;
         }
 
+        bool on_text_entered (uint32_t unicode) override {
+            for (int i = (int) arr.size () - 1; i >= 0; --i)
+                if (arr[i]->on_text_entered (unicode))
+                    return true;
+
+            return false;
+        }
+
         void draw () {
             for (size_t i = 0; i < arr.size (); ++i)
                 arr[i]->draw ();

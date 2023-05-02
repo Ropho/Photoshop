@@ -13,11 +13,15 @@ namespace GLUT {
 
         Entity entity = {
             rect,
-            rect->getGlobalBounds ()
+            Info {
+                rect->getGlobalBounds (),
+                rect->getFillColor (),
+            },
+            Type::RECT
         };
 
         return entity;
-    }    
+    }
 /////////////////////////////////////////////////CANVAS
 
     Entity GL::init_canvas (const Coords &coords, GLUT::Color color) {
@@ -29,7 +33,11 @@ namespace GLUT {
 
         Entity entity = {
             rect,
-            rect->getGlobalBounds ()
+            Info {
+                rect->getGlobalBounds (),
+                color,
+            },
+            Type::RECT
         };
 
         return entity;
@@ -44,37 +52,97 @@ namespace GLUT {
 
         Entity entity {
             dot,
-            dot->getGlobalBounds ()
+            Info {
+                dot->getGlobalBounds (),
+                dot->getFillColor ()
+            },
+            Type::DOT,
         };
 
-        std::cerr << entity.info.left << std::endl;
         return entity;
     }
 
     Entity GL::init_button (Point start, int width, int height, const std::string &texture_path) {
 
-        sf::CircleShape *circle = new sf::CircleShape (width / 2);
-        circle->move (start.get_x (), 
+        sf::RectangleShape *button = new sf::RectangleShape (sf::Vector2f (width, height));
+        button->move (start.get_x (), 
                      start.get_y ());
 
 
         sf::Texture *texture = nullptr;
         
-            texture = new sf::Texture {};
-            textures.push_back (texture);
+        texture = new sf::Texture {};
 
         if (!texture->loadFromFile (texture_path)) {
             Logger::Instance () -> log (__PF, 2, "unable to load a texture in a button");
             std::terminate ();
         }
 
-        circle->setTexture (texture);
+        button->setTexture (texture);
         
         Entity entity {
-            circle,
-            circle->getGlobalBounds ()
+            button,
+            Info {
+                button->getGlobalBounds (),
+                button->getFillColor (),
+            },
+            Type::RECT
         };
         
+        return entity;
+    }
+
+    Entity GL::init_button_color (Point start, int width, int height, const GLUT::Color& color) {
+
+        sf::RectangleShape *button = new sf::RectangleShape (sf::Vector2f (width, height));
+        button->move (start.get_x (), 
+                     start.get_y ());
+
+
+        button->setFillColor (color);
+        
+        Entity entity {
+            button,
+            Info {
+                button->getGlobalBounds (),
+                button->getFillColor (),
+            },
+            Type::RECT
+        };
+        
+        return entity;
+    }
+
+    Entity GL::init_text_button (Point start, int width, int height, const GLUT::Color &color, const std::string &message) {
+
+        sf::Font *font = new sf::Font;
+        if (!font->loadFromFile("./data/fonts/ARIAL.TTF")) {
+            Logger::Instance () -> log (__PF, 2, "unable to load font from file");
+            std::terminate ();
+        }
+
+        sf::Text *text = new sf::Text;
+
+        text -> setFont(*font);
+        text -> setString(message);
+
+        // set the character size
+        text -> setCharacterSize(width / message.length ()); // in pixels, not points!
+
+        // set the color
+        text -> setFillColor(sf::Color::White);
+        text -> setStyle(sf::Text::Bold);
+        
+        text -> move (start.get_x () + (width - text -> getGlobalBounds ().width) / 2, start.get_y () + (height - text -> getGlobalBounds().height) / 2);
+        Entity entity {
+            text,
+            Info {
+                text->getGlobalBounds (),
+                text->getFillColor (),
+            },
+            Type::RECT
+        };
+
         return entity;
     }
 
@@ -93,24 +161,44 @@ namespace GLUT {
         
         Entity entity {
             border,
-            border->getGlobalBounds ()
+            Info {
+                border->getGlobalBounds (),
+                border->getFillColor (),
+            },
+            Type::RECT
         };
         
         return entity;
     }
 
-    // void GL::draw_palette_caller (const Point &start, int width, int height, int tool_name) {
 
-    //     switch (tool_name) {
-    //         case PENCIL: {
-    //                 const char *path = "./data/textures/tools/pencil.png";
-    //                 draw_button (start, width, height, path);
-    //         }break;
+/////////////////////////////////////////////////TEXT_FORM
+    Entity GL::init_text_form (const Coords &coords, const std::string &message) {
 
-    //         default:
-    //             abort ();
-    //         break;
-    //     }
-    // }
+        Text_Field *text_form = new Text_Field (coords.strt() .get_x (), coords.strt ().get_y(), coords.width(), coords.height (), message);
 
+
+        Entity entity {
+            text_form,
+            Info {
+                text_form->getGlobalBounds (),
+                sf::Color::Black,
+                // text_form->getFillColor (),
+            },
+            Type::RECT
+        };
+
+        return entity;
+    }
+    void GL::draw_text_form (Entity entity, const std::string &message) {
+        Text_Field *text_field = dynamic_cast <Text_Field*> (entity.drawable);
+        if (text_field) {
+            text_field->set_message (message);
+        }else {
+            Logger::Instance () -> log (__PF, 2, "unable to convert ot Text_Field");
+            std::terminate ();
+        }
+        
+        draw (entity.drawable);
+    }
 }

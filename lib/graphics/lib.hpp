@@ -5,20 +5,30 @@
 #include <SFML/System.hpp>
 #include "../logger/logger.hpp"
 #include "../point/point.hpp"
-// #include "../class_tool/tool.hpp"
+#include "text_field.hpp"
 
 
 namespace GLUT {
 
-    // typedef sf::Drawable Entity;
-
     typedef sf::Drawable Drawable;
     typedef sf::Color    Color;
-    typedef sf::FloatRect Info;
+    typedef sf::FloatRect Bounds;
+    
+    struct Info {
+        Bounds bounds;
+        Color color;
+    };
+
+    enum class Type {
+        DOT         = 1,
+        RECT        = 2,
+    };
 
     typedef struct Entity {
         Drawable* drawable;
         Info info;
+        //add std::vector <> дополнительные (sf::Font*, sf::Texture*)
+        GLUT::Type type;
     } Entity;
 
     const int WIDTH  = 1200;
@@ -31,16 +41,10 @@ enum class EVENTS {
     NO_EVENT            = 0,
     CLOSE               = 1,
     MOUSE_PRESS         = 2,
-    MOUSE_RELEASE         = 3,
+    MOUSE_RELEASE       = 3,
     MOUSE_MOVE          = 4,
+    TEXT_ENTERED        = 5,
 };
-
-
-// enum class TOOLS {
-//     NO_TOOL = 0,
-//     PENCIL  = 1,
-
-// };
 
 
 //SFML GRAPHIC LIBRARY USAGE IN A PROGRAM
@@ -107,6 +111,10 @@ class GL {
             *y = event.mouseMove.y;
         }
 
+        void text_entered (uint32_t *unicode) {
+            *unicode = event.text.unicode;
+        }
+
         EVENTS get_event () {
 
             switch (event.type) {
@@ -127,6 +135,10 @@ class GL {
                     return EVENTS::MOUSE_MOVE;
                 break;
 
+                case sf::Event::TextEntered:
+                    return EVENTS::TEXT_ENTERED;
+                break;
+
                 default:
                     return EVENTS::NO_EVENT;
                 break;
@@ -145,23 +157,26 @@ class GL {
         //     return line_width_;
         // }
 /////////////////////////////////////////////////INIT
+        Entity init_text_form (const Coords &coords, const std::string &message);
         Entity init_background (const Color& color);
         Entity init_canvas (const Coords &coords, GLUT::Color color);
         Entity init_border (const Point &start, int width, int height);
         Entity init_button (Point start, int width, int height, const std::string &texture_path);
+        Entity init_button_color (Point start, int width, int height, const GLUT::Color& color);
+        Entity init_text_button (Point start, int width, int height, const GLUT::Color &color, const std::string &message);
         Entity init_canvas_background_changer (const Point &start, int width, int height, GLUT::Color color, const std::string& texture_path);
         Entity init_dot (const Point &pnt, const GLUT::Color& color);
         // void change_background (GLUT::Entity *entity, GLUT::Color color);
         // void draw_palette_caller (const Point &start, int width, int height, int tool_name);
+        void draw_text_form (Entity entity, const std::string &message);
 
 
 /////////////////////////////////////////////////
         void clear () {window.clear(sf::Color::Black);}
         void display () {window.display();}
-        // void refresh () {texture_counter = 0;}
         void draw (GLUT::Drawable *entity);
     private:
-        sf::RenderWindow window = sf::RenderWindow (sf::VideoMode (WIDTH, HEIGHT), "MAIN WINDOW");
+        sf::RenderWindow window = sf::RenderWindow (sf::VideoMode (WIDTH, HEIGHT), "Photoshop", sf::Style::Default);
         const int WIDTH_ = WIDTH;
         const int HEIGHT_ = HEIGHT;
         sf::Event event {};
@@ -175,7 +190,7 @@ class GL {
         // // std::vector <sf::Drawable *> canvas_entities {};
         // std::vector <sf::Texture *> canvas_textures = std::vector <sf::Texture *> {};
         // std::vector <sf::Texture *> other_textures = std::vector <sf::Texture *> {};
-        std::vector <sf::Texture *> textures {};
+        // std::vector <sf::Texture *> textures {};
 
         // static const size_t sprite_index = 0;
         // size_t texture_counter = 0;

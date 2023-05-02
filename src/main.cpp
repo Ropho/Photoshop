@@ -1,15 +1,36 @@
 #include "../lib/graphics/lib.hpp"
 #include "factory/factory.hpp"
 
-
 int main (void) {
     
+    // TextField tf (20);
+    // tf.setPosition (100, 100);
+    // GLUT::GL::Instance () -> draw (&tf);
 /////////////////////////////////////////////////MANAGERS
     Widget *desktop = Factory::Instance()->make_desktop (nullptr);
     Widget *palette = Factory::Instance()->make_palette (desktop);
 
+    
     Widget *background  = Factory::Instance()->make_background (palette, GLUT::Color::Yellow);
     // Widget *store   = Factory::Instance()->make_store   (palette);
+
+/////////////////////////////////////////////////FILE PANEL
+    Widget *file_panel_manager = Factory::Instance () -> make_panel_man (desktop);
+    Coords file_button_coords (Point {0, 0},
+                          GLUT::GL::Instance () -> width () / 10, GLUT::GL::Instance () -> width () / 30);
+    Widget *file_button = Factory::Instance() -> make_text_button (file_button_coords, file_panel_manager, GLUT::Color::Black, "FILE!");
+
+    Coords open_file_button_coords (file_button_coords.strt () + Point {0, file_button_coords.height ()},
+                          GLUT::GL::Instance () -> width () / 10, GLUT::GL::Instance () -> width () / 30);
+    Widget *open_file_button = Factory::Instance() -> make_open_file_button (open_file_button_coords, file_panel_manager, GLUT::Color::Red, "OPEN FILE!");
+
+    Coords save_file_button_coords (open_file_button_coords.strt () + Point {0, open_file_button_coords.height ()},
+                          GLUT::GL::Instance () -> width () / 10, GLUT::GL::Instance () -> width () / 30);
+    Widget *save_file_button = Factory::Instance() -> make_save_file_button (save_file_button_coords, file_panel_manager, GLUT::Color::Red, "SAVE FILE!");
+
+    Coords text_form_coord (open_file_button_coords.strt () + Point {open_file_button_coords.width (), open_file_button_coords.height () / 2}, 
+                            GLUT::GL::Instance()->width () / 10, GLUT::GL::Instance()->height () / 30);
+    Widget *text_form = Factory::Instance()->make_text_form (text_form_coord, file_panel_manager);
 
 /////////////////////////////////////////////////CANVAS
     Widget *canvas_man = Factory::Instance()->make_canvas_man (palette); 
@@ -29,15 +50,15 @@ int main (void) {
 
 // // /////////////////////////////////////////////////TOOLS
     Widget *tool_man = Factory::Instance()->make_tool_man (palette);
-    Coords  pencil_coords (Point {0, GLUT::GL::Instance()->width () / 10}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Coords  pencil_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 2}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
     Widget *pencil_button = Factory::Instance() -> make_pencil (pencil_coords, tool_man, canvas, "./data/textures/tools/pencil.png");
 
-    Coords  eraser_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 2}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Coords  eraser_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 3}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
     Widget *eraser_button = Factory::Instance() -> make_eraser (eraser_coords, tool_man, canvas, "./data/textures/tools/eraser.png");
 
 /////////////////////////////////////////////////
     Widget *color_man = Factory::Instance() -> make_color_man (tool_man);
-    Coords  color_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 3}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
+    Coords  color_coords (Point {0, GLUT::GL::Instance()->width () / 10 * 4}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
     Widget *color_button = Factory::Instance() -> make_color_changer_activator (color_coords, color_man, "./data/textures/tools/colors.png");
 //             /////////////////////////////////////
     Coords  color_coords_1 (Point {GLUT::GL::Instance()->width () / 10, GLUT::GL::Instance()->width () / 10 * 2}, GLUT::GL::Instance()->width ()  / 10, GLUT::GL::Instance()->width () / 10);
@@ -86,20 +107,24 @@ int main (void) {
         
                     desktop->on_mouse_move (x, y);
                 } break;
+                
+                case GLUT::EVENTS::TEXT_ENTERED: {
+                    uint32_t unicode = 0;
+                    GLUT::GL::Instance () -> text_entered (&unicode);
 
-                default: {
-
+                    desktop -> on_text_entered (unicode);
                 } break;
 
+                default: {
+                } break;
             }
         }
         
         GLUT::GL::Instance()->clear ();
+            // GLUT::GL::Instance () -> draw (&tf);
         desktop->draw ();
         GLUT::GL::Instance()->display ();
-        // GLUT::GL::Instance()->refresh ();
 
-        // std::terminate ();
     }
 
     delete desktop;

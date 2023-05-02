@@ -61,10 +61,10 @@ class Widget {
 
         // virtual void close () = 0;
         // virtual void move  () = 0;
-        virtual bool on_mouse_release  (int x, int y) = 0;
-        virtual bool on_mouse_press  (int x, int y) = 0;
-        virtual bool on_mouse_move   (int x, int y) = 0;
-
+        virtual bool on_mouse_release   (int x, int y) {return false;}
+        virtual bool on_mouse_press     (int x, int y) {return false;}
+        virtual bool on_mouse_move      (int x, int y) {return false;}
+        virtual bool on_text_entered (uint32_t unicode) {return false;}
         // virtual void on_press () = 0;
         
         bool check_bound (int x, int y) {

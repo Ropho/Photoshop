@@ -46,7 +46,7 @@ class Eraser : public Abstract_Tool {
                 std::vector <GLUT::Entity> &entities = canvas -> get_entities ();
                 
                 for (int i = entities.size () - 1; i >= 0; i--) {            
-                    if (entities[i].info.contains (pnt_.get_x (), pnt_.get_y ())) {
+                    if (entities[i].info.bounds.contains (pnt_.get_x (), pnt_.get_y ())) {
                         entities.erase (entities.begin () + i);
                         break;
                     }                
