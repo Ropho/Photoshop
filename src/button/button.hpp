@@ -8,8 +8,8 @@
 
         public:
 
-            Abstract_Button (Coords coords, Widget *parent) :
-                Widget (coords, parent)
+            Abstract_Button (Coords coords, Widget *parent, const std::string &texture_path) :
+                Widget (coords, parent), texture_path_ (texture_path)
             {
                 Logger::Instance ()->log (__PF);
             }
@@ -18,15 +18,39 @@
                 Logger::Instance ()->log (__PF);
             }
 
-            virtual void action () = 0;
+            virtual void action_on_mouse_release () = 0;
+            virtual void action_on_mouse_press () = 0;
             
-            bool on_click (int x, int y) {
+            virtual bool on_mouse_release (int x, int y) {
                 if (check_bound (x, y)) {
-                    action ();
+                    action_on_mouse_release ();
                     return true;
                 }
 
                 return false;
             }
+
+            virtual bool on_mouse_press (int x, int y) {
+                if (check_bound (x, y)) {
+                    action_on_mouse_press ();
+                    return true;
+                }
+
+                return false;
+            }
+
+            virtual bool on_mouse_move (int x, int y) {
+                return false;
+            }
+
+            std::string& texture_path () {
+                return texture_path_;
+            }
+            void set_texture_path (const std::string &texture_path) {
+                texture_path_ = texture_path;
+            }
+
+        protected:
+            std::string texture_path_;
     };
 #endif

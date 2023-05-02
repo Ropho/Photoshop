@@ -2,13 +2,8 @@
 #define LOG_HPP
 
 #include <iostream>
-// #include <vector>
-// #include "class_vector/vector.hpp"
 
 #define __PF __PRETTY_FUNCTION__
-#define __F  __FUNCTION__
-
-// void log (const char *func_name);
 
 enum MODES {
 

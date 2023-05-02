@@ -2,7 +2,7 @@
 #define CHANGE_CANVAS_BACKGROUND_HPP
 
 #include "cmd.hpp"
-#include "../canvas/canvas.hpp"
+#include "../widget/canvas.hpp"
 
 class Change_Canvas_Background : public Abstract_Cmd {
 
@@ -22,7 +22,6 @@ class Change_Canvas_Background : public Abstract_Cmd {
                 Logger::Instance()->log (__PF, 2, "not canvas given =(");                
                 std::terminate ();
             }
-            canvas -> clear ();
             canvas->set_color (color_);
             canvas->init ();
         }

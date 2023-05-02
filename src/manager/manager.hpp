@@ -28,9 +28,31 @@ class Manager : public Widget {
             arr.push_back (widget);
         }
 
-        bool on_click (int x, int y) {
+        bool on_mouse_release (int x, int y) override {
             for (int i = (int) arr.size () - 1; i >= 0; --i)
-                if (arr[i]->on_click (x, y))
+                if (arr[i]->on_mouse_release (x, y))
+                    return true;
+
+            return false;
+        }
+        bool on_mouse_press (int x, int y) override {
+            for (int i = (int) arr.size () - 1; i >= 0; --i)
+                if (arr[i]->on_mouse_press (x, y))
+                    return true;
+
+            return false;
+        }
+        bool on_mouse_move (int x, int y) override {
+            for (int i = (int) arr.size () - 1; i >= 0; --i)
+                if (arr[i]->on_mouse_move (x, y))
+                    return true;
+
+            return false;
+        }
+
+        bool on_text_entered (uint32_t unicode) override {
+            for (int i = (int) arr.size () - 1; i >= 0; --i)
+                if (arr[i]->on_text_entered (unicode))
                     return true;
 
             return false;

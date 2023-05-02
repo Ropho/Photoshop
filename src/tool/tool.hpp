@@ -11,6 +11,7 @@
 enum class TOOLS {
     NO_TOOL = 0,
     PENCIL  = 1,
+    ERASER  = 2,
 };
 
 class Abstract_Tool {
@@ -27,12 +28,17 @@ class Abstract_Tool {
             Logger::Instance() -> log (__PF);
         }
 
-        virtual void action (void *param) = 0;        
-        // virtual void add_entity (GLUT::Entity* entity) = 0;
-        
+        virtual void start_action (void *param) = 0;        
+        virtual void end_action   (void *param) = 0;        
+        virtual void action (void *param)  = 0;
         void set_color (const GLUT::Color& color) {
             color_ = color;
         }
+
+        bool mouse_button_pressed () {return mouse_button_pressed_;}
+        void mouse_button_press () {mouse_button_pressed_ = true;}
+        void mouse_button_release () {mouse_button_pressed_ = false;}
+
         // void set_size ()
 
     //     GLUT::TOOLS name () {
@@ -62,6 +68,8 @@ class Abstract_Tool {
         }
 
         protected:
+            bool mouse_button_pressed_ = false;
+
             Widget *parent_ = nullptr;
             TOOLS tool_ = TOOLS::NO_TOOL;
             Widget *use_instance_ = nullptr;

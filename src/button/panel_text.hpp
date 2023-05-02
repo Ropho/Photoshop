@@ -1,14 +1,14 @@
-#ifndef COLOR_CHANGER_ACTIVATOR_HPP
-#define COLOR_CHANGER_ACTIVATOR_HPP
+#ifndef PANEL_TEXT_BUTTON_HPP
+#define PANEL_TEXT_BUTTON_HPP
 
 #include "button.hpp"
 #include "../cmd/activate.hpp"
 
-    class Color_Changer_Activator : public Abstract_Button {
+    class Panel_Text : public Abstract_Button {
 
         public:
-            Color_Changer_Activator (Coords coords, Widget* ptr, const std::string &texture_path) :
-                Abstract_Button (coords, ptr, texture_path)
+            Panel_Text (Coords coords, Widget* ptr, const GLUT::Color& color, const std::string &message) :
+                Abstract_Button (coords, ptr, ""), message_ (message), color_ (color)
             {
                 Logger::Instance () -> log (__PF);
                 init ();
@@ -16,11 +16,12 @@
 
             void init () override {
                 entities_.push_back (GLUT::GL::Instance()->init_border (coords_.strt (), coords_.width (), coords_.height ()));
-                entities_.push_back (GLUT::GL::Instance()->init_button (coords_.strt (), coords_.width (), coords_.height (), 
-                                    Abstract_Button::texture_path ()));
+                entities_.push_back (GLUT::GL::Instance()->init_button_color (coords_.strt (), coords_.width (), coords_.height (),color_ ));
+                entities_.push_back (GLUT::GL::Instance()->init_text_button (coords_.strt (), coords_.width (), coords_.height (), 
+                                    color_, message_));
             }
-            
-            ~Color_Changer_Activator () {
+
+            ~Panel_Text () {
                 Logger::Instance () -> log (__PF);
             }
 
@@ -47,7 +48,13 @@
                     }
                 }
             }
+
             void action_on_mouse_release () override {}
+
+
+        protected:
+            std::string message_;
+            GLUT::Color color_;
     };
 
 #endif

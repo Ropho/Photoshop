@@ -1,21 +1,28 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
 
-// #include "../canvas/canvas.hpp"
-// #include "../button/button.hpp"
 #include "../../lib/vector/vector.hpp"
-#include "../widget/background.hpp"
+
 #include "../manager/manager.hpp"
 #include "../manager/palette.hpp"
 #include "../manager/tool.hpp"
-#include "../store/store.hpp"
 #include "../manager/canvas.hpp"
 #include "../manager/color.hpp"
+#include "../manager/file_button.hpp"
+#include "../manager/desktop.hpp"
+
 #include "../button/canvas_background_changer.hpp"
 #include "../button/color_changer_activator.hpp"
 #include "../button/tool_color_changer.hpp"
-#include "../tool/pencil.hpp"
 #include "../button/tool.hpp"
+#include "../button/panel_text.hpp"
+#include "../button/file_panel_text.hpp"
+
+#include "../tool/pencil.hpp"
+#include "../tool/eraser.hpp"
+
+#include "../widget/background.hpp"
+#include "../widget/text_form.hpp"
 
 
 class Factory {
@@ -35,8 +42,6 @@ class Factory {
         }
         ~Factory () {
             Logger::Instance()->log (__PF);
-            // for (size_t i = 0; i < widgets.size (); ++i)
-                // delete widgets[i];
         }
     
     public:
@@ -56,7 +61,7 @@ class Factory {
 /////////////////////////////////////////////////MANAGERS
         Widget* make_desktop (Widget *parent) {
             
-            Widget *manager = new Manager (parent);            
+            Widget *manager = new Desktop_Manager (parent);            
             add_in_parent (parent, manager);
 
             return manager;
@@ -70,11 +75,11 @@ class Factory {
             return palette;
         }
 
-        Widget *make_store (Widget *parent) {
-            Widget *store = new Store (parent);
-            add_in_parent (parent, store);
-            return store;
-        }
+        // Widget *make_store (Widget *parent) {
+        //     Widget *store = new Store (parent);
+        //     add_in_parent (parent, store);
+        //     return store;
+        // }
 
         Widget *make_canvas_man (Widget *parent) {
 
@@ -99,6 +104,14 @@ class Factory {
 
             return man;
         }
+
+        Widget *make_panel_man (Widget *parent) {
+
+            Widget *man = new File_Button_Manager (parent);
+            add_in_parent (parent, man);
+
+            return man;
+        }
 // /////////////////////////////////////////////////WIDGETS
         Widget *make_canvas (Coords coords, GLUT::Color color, Widget *parent) {
 
@@ -108,31 +121,31 @@ class Factory {
             return canvas;
         }
 
-        Widget * make_canvas_background_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_canvas_background_changer (Coords coords, Widget *parent, GLUT::Color color, const std::string& texture_path) {
 
-            Widget *button   = new Canvas_Background_Changer (coords, parent, color);
+            Widget *button   = new Canvas_Background_Changer (coords, parent, color, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color) {
+        Widget * make_tool_color_changer (Coords coords, Widget *parent, GLUT::Color color, const std::string& texture_path) {
 
-            Widget *button   = new Tool_Color_Changer (coords, parent, color);
+            Widget *button   = new Tool_Color_Changer (coords, parent, color, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget * make_color_changer_activator (Coords coords, Widget *parent, char *texture) {
+        Widget * make_color_changer_activator (Coords coords, Widget *parent, const std::string& texture_path) {
 
-            Widget *button   = new Color_Changer_Activator (coords, parent, texture);
+            Widget *button   = new Color_Changer_Activator (coords, parent, texture_path);
             add_in_parent (parent, button);
 
             return button;
         }
 
-        Widget *make_pencil (Coords coords, Widget *parent, Widget* canvas) {
+        Widget *make_pencil (Coords coords, Widget *parent, Widget* canvas, const std::string& texture_path) {
 
             
             if (dynamic_cast <Canvas *> (canvas) == nullptr) {
@@ -140,7 +153,23 @@ class Factory {
             }
 
             Abstract_Tool *tool  = new Pencil (nullptr, canvas);
-            Widget *button = new Tool_Button (coords, parent, tool);
+            Widget *button = new Tool_Button (coords, parent, tool, texture_path);
+
+            add_in_parent (parent, button);
+            tool->set_parent (button);
+            
+            return button;
+        }
+
+        Widget *make_eraser (Coords coords, Widget *parent, Widget* canvas, const std::string& texture_path) {
+
+            
+            if (dynamic_cast <Canvas *> (canvas) == nullptr) {
+                std::terminate ();
+            }
+
+            Abstract_Tool *tool  = new Eraser (nullptr, canvas);
+            Widget *button = new Tool_Button (coords, parent, tool, texture_path);
 
             add_in_parent (parent, button);
             tool->set_parent (button);
@@ -154,7 +183,39 @@ class Factory {
             add_in_parent (parent, back);
             return back;
         }
-    
+
+        Widget *make_text_button (const Coords &coords, Widget *parent, const GLUT::Color &color, const std::string &message) {
+
+            Widget *button = new Panel_Text (coords, parent, color, message);
+            add_in_parent (parent, button);
+            
+            return button;
+        }
+
+        Widget *make_open_file_button (const Coords &coords, Widget *parent, const GLUT::Color &color, const std::string &message) {
+
+            Widget *button = new Open_File_Button (coords, parent, color, message);
+            add_in_parent (parent, button);
+            
+            return button;
+        }
+
+        Widget *make_save_file_button (const Coords &coords, Widget *parent, const GLUT::Color &color, const std::string &message) {
+
+            Widget *button = new Save_File_Button (coords, parent, color, message);
+            add_in_parent (parent, button);
+            
+            return button;
+        }
+
+        Widget *make_text_form (const Coords &coords, Widget *parent) {
+
+            Widget *text_form = new Text_Form (coords, parent);
+            add_in_parent (parent, text_form);
+            
+            return text_form;
+        }
+
         private:
             inline static Factory *instance_ = nullptr;
     };
