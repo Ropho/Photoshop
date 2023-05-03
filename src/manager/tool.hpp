@@ -62,7 +62,7 @@ class Tool_Man : public Manager {
                     break;
 
                     default:
-                        Logger::Instance () -> log (__PF, 2, "UNKNOWN TOOL");
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "UNKNOWN TOOL");
                         std::terminate ();
                     break;
                 }
@@ -70,7 +70,7 @@ class Tool_Man : public Manager {
                 tool_ -> start_action (param);
             
             } else {
-                Logger::Instance () -> log (__PF, 2, "NO TOOL SELECTED");
+                Logger::Instance () -> log (__PF, LOG_LVL::ERROR, "NO TOOL SELECTED");
             }
         }
 
@@ -84,7 +84,7 @@ class Tool_Man : public Manager {
                     break;
 
                     default:
-                        Logger::Instance () -> log (__PF, 2, "UNKNOWN TOOL");
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "UNKNOWN TOOL");
                         std::terminate ();
                     break;
                 }
@@ -92,7 +92,7 @@ class Tool_Man : public Manager {
                 tool_ -> action (param);
             
             } else {
-                Logger::Instance () -> log (__PF, 2, "NO TOOL SELECTED");
+                Logger::Instance () -> log (__PF, LOG_LVL::ERROR, "NO TOOL SELECTED");
             }
         }
 
@@ -106,7 +106,7 @@ class Tool_Man : public Manager {
                     break;
 
                     default:
-                        Logger::Instance () -> log (__PF, 2, "UNKNOWN TOOL");
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "UNKNOWN TOOL");
                         std::terminate ();
                     break;
                 }
@@ -114,7 +114,7 @@ class Tool_Man : public Manager {
                 tool_ -> end_action (param);
             
             } else {
-                Logger::Instance () -> log (__PF, 2, "NO TOOL SELECTED");
+                Logger::Instance () -> log (__PF, LOG_LVL::ERROR, "NO TOOL SELECTED");
             }
         }
 
@@ -133,9 +133,6 @@ class Tool_Man : public Manager {
         private:
             Abstract_Tool *tool_ = nullptr; 
             GLUT::Color color_ = GLUT::Color::Black;
-            // vector <Tool *> tools {};
-            // std::unordered_map <int, Tool *> map {};
-            // Tool *current_action = nullptr;
 };
 
 

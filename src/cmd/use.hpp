@@ -21,6 +21,7 @@ class Start_Use_Current_Tool : public Abstract_Cmd {
 
             Tool_Man *man = dynamic_cast <Tool_Man *> (argument);
             if (man == nullptr) {
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }
             man->start_use_current_tool (param_);
@@ -45,6 +46,7 @@ class Use_Current_Tool : public Abstract_Cmd {
 
             Tool_Man *man = dynamic_cast <Tool_Man *> (argument);
             if (man == nullptr) {
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }
             man->use_current_tool (param_);
@@ -68,6 +70,7 @@ class End_Use_Current_Tool : public Abstract_Cmd {
 
             Tool_Man *man = dynamic_cast <Tool_Man *> (argument);
             if (man == nullptr) {
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }
             man->end_use_current_tool (param_);

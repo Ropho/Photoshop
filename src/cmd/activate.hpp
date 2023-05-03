@@ -23,7 +23,7 @@ class Activate : public Abstract_Cmd {
             if (man) {
                 
             }else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to manager");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }            
             man->activate ();
@@ -49,7 +49,7 @@ class Deactivate : public Abstract_Cmd {
             if (man) {
                 
             }else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to manager");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }
             man -> deactivate ();

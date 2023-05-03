@@ -1,11 +1,7 @@
 #ifndef ABSTRACT_TOOL_HPP
 #define ABSTRACT_TOOL_HPP
 
-// #include "../../lib/logger/logger.hpp"
-// #include "../../lib/vector/vector.hpp"
-// #include "../../lib/graphics/lib.hpp"
 #include "../widget/widget.hpp"
-// #include <queue>
 
 
 enum class TOOLS {
@@ -39,20 +35,6 @@ class Abstract_Tool {
         void mouse_button_press () {mouse_button_pressed_ = true;}
         void mouse_button_release () {mouse_button_pressed_ = false;}
 
-        // void set_size ()
-
-    //     GLUT::TOOLS name () {
-    //         return name_;
-    //     }
-
-    //     std::queue<GLUT::Entity *>& get_entities () {
-    //         return entities_;
-    //     }
-
-    //  protected:
-    //     GLUT::Color color_ = GLUT::WHITE;
-    //     GLUT::TOOLS name_ = GLUT::NO_TOOL;
-    //     std::queue <GLUT::Entity*> entities_ {};
         virtual void set_param (void *) = 0;
 
         TOOLS tool () {

@@ -17,6 +17,7 @@ class Canvas : public Widget {
     public:        
         ~Canvas () {
             Logger::Instance()->log(__PF);
+            delete (canvas_.drawable);
         }
 
         Canvas (Coords coords, GLUT::Color color, Widget *parent) :
@@ -31,7 +32,7 @@ class Canvas : public Widget {
             std::fstream file_output;
             file_output.open (out, std::fstream::out);
             if (file_output.fail ()) {
-                Logger::Instance () -> log (__PF, 2, "unable to create file with given name");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to create file with given name");
                 std::terminate ();
             }
             
@@ -39,10 +40,9 @@ class Canvas : public Widget {
 
             file_output.close ();
             if (file_output.fail ()) {
-                Logger::Instance () -> log (__PF, 2, "unable to gracefully close file with given name");
+                Logger::Instance () -> log (__PF, LOG_LVL::ERROR, "unable to gracefully close file with given name");
             }
-                Logger::Instance () -> log (__PF, 2, "SUCCESS");
-        
+                Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "SUCCESS WRITING TO FILE");        
         }
         
         void retrieve_from_file (const std::string &in) {
@@ -50,29 +50,49 @@ class Canvas : public Widget {
             std::fstream file_input;
             file_input.open (in, std::fstream::in);
             if (file_input.fail ()) {
-                Logger::Instance () -> log (__PF, 2, "unable to open file with given name");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to open file with given name");
                 std::terminate ();
             }
 
-            GLUT::Entity entity;
-            
+            GLUT::Entity entity; 
             uint32_t color;
+            int type;
             
             while (!file_input.eof ()) {
-                file_input  >> entity.info.bounds.left >> entity.info.bounds.top 
-                    >> color;
+                file_input >> type;
+                
+                switch (GLUT::Type (type)) {
+                    
+                    case GLUT::Type::DOT: {
+                        file_input  >> entity.info.bounds.left >> entity.info.bounds.top 
+                            >> color;
 
-                // entity.info.color = new_color;
-                GLUT::Color new_color (color);
-            
-                init_dot (Point {entity.info.bounds.left, entity.info.bounds.top}, new_color);
+                        GLUT::Color new_color (color);                    
+                        init_dot (Point {entity.info.bounds.left, entity.info.bounds.top}, new_color);
+                    } break;
+
+                    case GLUT::Type::RECT: {
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "not handled yet type");
+                        std::terminate ();
+                    } break;
+
+                    case GLUT::Type::BACKGROUND: {
+                        file_input >> color;
+                        update_background (GLUT::Color (color));
+                    } break;
+
+                    default:
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unknown type");
+                        std::terminate ();
+                    break;
+                }
             }
 
             file_input.close ();
             if (file_input.fail ()) {
-                Logger::Instance () -> log (__PF, 2, "unable to gracefully close file with given name");
+                Logger::Instance () -> log (__PF, LOG_LVL::ERROR, "unable to gracefully close file with given name");
             }
-                Logger::Instance () -> log (__PF, 2, "SUCCESS");
+                Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "SUCCESS READING FROM FILE");
 
         }
 
@@ -95,7 +115,7 @@ class Canvas : public Widget {
         bool on_mouse_release (int x, int y) override {
             if (check_bound (x, y)) {
 
-                fprintf (stderr, "RELEASE IN CANVAS!!!!\n");
+                Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "RELEASE IN CANVAS!!!!");
 
                 Canvas_Param *param = new Canvas_Param;
                 param->pnt = Point (x, y);
@@ -114,7 +134,7 @@ class Canvas : public Widget {
 
         bool on_mouse_move (int x, int y) override {
             if (check_bound (x, y)) {
-                fprintf (stderr, "MOVE IN CANVAS!!!!\n");
+                Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "MOVE IN CANVAS!!!!");
                 
                 Canvas_Param *param = new Canvas_Param;
                 param->pnt = Point (x, y);
@@ -133,8 +153,8 @@ class Canvas : public Widget {
 
         bool on_mouse_press (int x, int y) override {
             if (check_bound (x, y)) {
-                fprintf (stderr, "PRESS IN CANVAS!!!!\n");
-            
+                Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "PRESS IN CANVAS!!!!");
+
                 Canvas_Param *param = new Canvas_Param;
                 param->pnt = Point (x, y);
 
@@ -153,15 +173,25 @@ class Canvas : public Widget {
         void set_color (GLUT::Color color) {
             color_ = color;
         }
-        
+
+        void update_background (GLUT::Color color) {
+            set_color (color);
+            delete (canvas_.drawable);
+            init ();
+        }
+
         void write_all_to_file (std::fstream& out) {
+
+            // BACKGROUND            
+            out << int (GLUT::Type::BACKGROUND) << " " << color_.toInteger () << "\n";
+            
+            // Entities
             for (size_t i = 0; i < entities_.size (); i++) {
                 switch (entities_[i].type) {
                     case GLUT::Type::DOT:
 
-                        out << entities_[i].info.bounds.left << " " << entities_[i].info.bounds.top 
+                        out << int (GLUT::Type::DOT) << " " << entities_[i].info.bounds.left << " " << entities_[i].info.bounds.top 
                             << " " << entities_[i].info.color.toInteger () << "\n";
-                        
                     break;
 
                     default:

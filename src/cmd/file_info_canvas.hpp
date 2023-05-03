@@ -20,7 +20,7 @@ class Save_To_File : public Abstract_Cmd {
             if (canvas) {
                 
             }else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to canvas");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to canvas");
                 std::terminate ();
             }            
             canvas -> save_to_file (file_name_);
@@ -47,7 +47,7 @@ class Retrieve_From_File : public Abstract_Cmd {
             if (canvas) {
                 
             }else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to canvas");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to canvas");
                 std::terminate ();
             }            
             canvas -> retrieve_from_file (file_name_);

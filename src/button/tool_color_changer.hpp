@@ -33,13 +33,11 @@
                 if (man)
                     man -> controller (cmd);
                 else {
-                    Logger::Instance () -> log (__PF, 2, "unable to conver to manager");
+                    Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                     std::terminate ();
                 }
-
-                // NEW_CMD (ACTIONS::CHANGE_TOOL_COLOR, COLOR, this, color_, GLUT::Color);
-                // END_CMD;
             }
+
             void action_on_mouse_release () override {}
 
             void draw () override {

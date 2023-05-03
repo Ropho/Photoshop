@@ -37,7 +37,7 @@
                     if (man)
                         man -> controller (cmd_get);
                     else {
-                        Logger::Instance ()-> log (__PF, 2, "unable to convert to manager\n");
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                         std::terminate ();
                     }
 
@@ -89,7 +89,7 @@
                     if (man)
                         man -> controller (cmd_get);
                     else {
-                        Logger::Instance ()-> log (__PF, 2, "unable to convert to manager\n");
+                        Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                         std::terminate ();
                     }
 

@@ -5,10 +5,12 @@
 
 #define __PF __PRETTY_FUNCTION__
 
-enum MODES {
+enum class LOG_LVL {
 
     INFO     = 1,
-    CRITICAL = 2,
+    FATAL    = 2,
+    TRACE    = 3,
+    ERROR    = 4,
 };
 
 class Logger {
@@ -21,17 +23,23 @@ class Logger {
             return instance_;
         }
 
-        void log (const char *func_name, int mode = INFO, const char *message = nullptr) {
+        void log (const char *func_name, LOG_LVL mode = LOG_LVL::INFO, const char *message = nullptr) {
             
             switch (mode) {
                 
-                case INFO: {
-    // fprintf (stderr, "\x1b[31mFUNC: \x1b[32m%s\x1b[0m\n", func_name);
-                    fprintf (stderr, "\x1b[33m[INFO] \x1b[92m%s \x1b[33m%s\x1b[0m\n", func_name, message);
+                case LOG_LVL::TRACE: {
+                    fprintf (stderr, "\x1b[32m[TRACE] \x1b[95m%s \x1b[37m%s\x1b[0m\n", func_name, message);
+                } break;
+
+                case LOG_LVL::INFO: {
+                    fprintf (stderr, "\x1b[36m[INFO] \x1b[95m%s \x1b[37m%s\x1b[0m\n", func_name, message);
                 }break;
 
-                case CRITICAL: {
-                    fprintf (stderr, "\x1b[31m[FATAL] \x1b[92m%s \x1b[31m%s\x1b[0m\n", func_name, message);
+                case LOG_LVL::ERROR: {
+                    fprintf (stderr, "\x1b[33m[ERROR] \x1b[95m%s \x1b[37m%s\x1b[0m\n", func_name, message);
+                }break;
+                case LOG_LVL::FATAL: {
+                    fprintf (stderr, "\x1b[31m[FATAL] \x1b[95m%s \x1b[37m%s\x1b[0m\n", func_name, message);
                 }break;
 
                 default:
@@ -48,9 +56,5 @@ class Logger {
     private:
         inline static Logger *instance_ = nullptr;
 };
-
-
-// extern Logger logger;
-
 
 #endif

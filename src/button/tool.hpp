@@ -41,7 +41,6 @@
                 else {
                     active_ = false;
 
-                    // NEW_CMD (ACTIONS::REMOVE_CURRENT, NULLPTR, this, nullptr, nullptr_t);
                     Remove_Current cmd (this);
                     Manager *man = dynamic_cast <Manager *> (parent_);
                     if (man == nullptr) {

@@ -43,7 +43,7 @@ class Pencil : public Abstract_Tool {
                 Canvas *canvas = dynamic_cast <Canvas *> (use_instance_);
 
                 if (canvas == nullptr) {
-                    Logger::Instance() -> log (__PF, 2, "cant convert to canvas type");  
+                    Logger::Instance() -> log (__PF, LOG_LVL::FATAL, "cant convert to canvas type");  
                     std::terminate ();
                 } 
 
