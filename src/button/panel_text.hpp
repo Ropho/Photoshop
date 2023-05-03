@@ -35,7 +35,7 @@
                     if (man)
                         man -> controller (cmd);
                     else {
-                        Logger::Instance ()-> log (__PF, 2, "unable to convert to manager\n");
+                    Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                     }
                 }
                 else {
@@ -44,7 +44,7 @@
                     if (man)
                         man -> controller (cmd);
                     else {
-                        Logger::Instance ()-> log (__PF, 2, "unable to convert to manager\n");
+                    Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                     }
                 }
             }

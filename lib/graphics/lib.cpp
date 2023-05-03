@@ -74,7 +74,7 @@ namespace GLUT {
         texture = new sf::Texture {};
 
         if (!texture->loadFromFile (texture_path)) {
-            Logger::Instance () -> log (__PF, 2, "unable to load a texture in a button");
+            Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to load a texture in a button");
             std::terminate ();
         }
 
@@ -117,7 +117,7 @@ namespace GLUT {
 
         sf::Font *font = new sf::Font;
         if (!font->loadFromFile("./data/fonts/ARIAL.TTF")) {
-            Logger::Instance () -> log (__PF, 2, "unable to load font from file");
+            Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to load font from file");
             std::terminate ();
         }
 
@@ -195,7 +195,7 @@ namespace GLUT {
         if (text_field) {
             text_field->set_message (message);
         }else {
-            Logger::Instance () -> log (__PF, 2, "unable to convert ot Text_Field");
+            Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert ot Text_Field");
             std::terminate ();
         }
         

@@ -23,7 +23,7 @@
         bool on_mouse_move  (int x, int y) override {return false;}
         
         bool on_text_entered (uint32_t unicode) override {
-            Logger::Instance () -> log (__PF, 2, "ON TEXT ENTERED");
+            Logger::Instance () -> log (__PF, LOG_LVL::TRACE, "ON TEXT ENTERED");
             if (active_) {
 
                 if (unicode == 8) {   // Delete key

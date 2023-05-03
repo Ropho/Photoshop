@@ -13,17 +13,15 @@ class Change_Canvas_Background : public Abstract_Cmd {
             Logger::Instance()->log (__PF);
 
         }
-// virtual void execute (Widget *argument) = 0;
 
         void execute (Widget *argument) override {
             Logger::Instance()->log (__PF);
             Canvas *canvas = dynamic_cast <Canvas *> (argument);
             if (canvas == nullptr) {
-                Logger::Instance()->log (__PF, 2, "not canvas given =(");                
+                Logger::Instance()->log (__PF, LOG_LVL::FATAL, "not canvas given =(");                
                 std::terminate ();
             }
-            canvas->set_color (color_);
-            canvas->init ();
+            canvas -> update_background (color_);
         }
 
     private:

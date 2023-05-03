@@ -24,7 +24,7 @@ class Set_Current : public Abstract_Cmd {
             if (man)
                 man->set_current (tool_);
             else {
-                Logger::Instance ()-> log (__PF, 2, "unable to conver to manager\n");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
             }
         }
 
@@ -50,7 +50,7 @@ class Remove_Current : public Abstract_Cmd {
             if (man)
                 man->remove_current ();
             else {
-                Logger::Instance ()-> log (__PF, 2, "unable to conver to manager\n");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
             }
         }
 };

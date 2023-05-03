@@ -82,8 +82,6 @@ class Manager : public Widget {
             if (cmd.from () != parent_) {
                 Manager *man = dynamic_cast <Manager *> (parent_);
                 if (man != nullptr) {
-                        // auto new_cmd = cmd;
-                        // new_cmd.set_from (this);
                         cmd.set_parent (this);
                         man->controller (cmd);
                 }

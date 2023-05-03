@@ -53,7 +53,7 @@ class Factory {
                 if (manager != nullptr)
                     manager->add (obj);
                 else {
-                    Logger::Instance()->log (__PF, CRITICAL, "UNABLE TO CONVERT TO MANAGER");
+                    Logger::Instance()->log (__PF, LOG_LVL::FATAL, "UNABLE TO CONVERT TO MANAGER");
                     std::terminate ();
                 }
             }
@@ -74,12 +74,6 @@ class Factory {
 
             return palette;
         }
-
-        // Widget *make_store (Widget *parent) {
-        //     Widget *store = new Store (parent);
-        //     add_in_parent (parent, store);
-        //     return store;
-        // }
 
         Widget *make_canvas_man (Widget *parent) {
 

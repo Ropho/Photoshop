@@ -13,14 +13,14 @@ class Widget {
         Coords coords_ {{0, 0}, 0, 0};
 
         Widget *parent_ = nullptr;
-            
+
         bool active_ = false;
-    
+
         std::vector <GLUT::Entity> entities_ {};
 
     public:
         std::vector <GLUT::Entity> &get_entities () {return entities_;}
-        
+
         void deactivate () {
             active_ = false;
         }
@@ -32,11 +32,9 @@ class Widget {
             Logger::Instance()->log (__PF);
             clear ();
         }
-        
+
         virtual void init () {}
         virtual void clear () {
-            // for (size_t i = 0; i < drawable_.size (); i++)
-                // delete drawable_[i];
             entities_.clear ();
         }
 
@@ -65,7 +63,6 @@ class Widget {
         virtual bool on_mouse_press     (int x, int y) {return false;}
         virtual bool on_mouse_move      (int x, int y) {return false;}
         virtual bool on_text_entered (uint32_t unicode) {return false;}
-        // virtual void on_press () = 0;
         
         bool check_bound (int x, int y) {
             

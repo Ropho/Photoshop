@@ -22,6 +22,7 @@ namespace GLUT {
     enum class Type {
         DOT         = 1,
         RECT        = 2,
+        BACKGROUND  = 3,
     };
 
     typedef struct Entity {
@@ -56,17 +57,6 @@ class GL {
         
         ~GL () {
             Logger::Instance()->log (__PF);
-            
-            // delete[] pixels;
-            
-            // for (size_t i = 0; i < canvas_textures.size (); ++i)
-            //     delete canvas_textures[i];
-
-            // // for (size_t i = 0; i < canvas_entities.size (); ++i)
-            //     // delete canvas_entities[i];
-
-            // for (size_t i = 0; i < other_textures.size (); ++i)
-            //     delete other_textures[i];
         }
 
 
@@ -180,20 +170,6 @@ class GL {
         const int WIDTH_ = WIDTH;
         const int HEIGHT_ = HEIGHT;
         sf::Event event {};
-        // sf::Uint8 *pixels = new sf::Uint8 [WIDTH_ * HEIGHT_ * 4];
-        // // sf::Texture texture_ {};
-        // // sf::Sprite *sprite_ = nullptr;
-        // static Coords canvas_;
-
-        // static int line_width_ = 1;
-
-        // // std::vector <sf::Drawable *> canvas_entities {};
-        // std::vector <sf::Texture *> canvas_textures = std::vector <sf::Texture *> {};
-        // std::vector <sf::Texture *> other_textures = std::vector <sf::Texture *> {};
-        // std::vector <sf::Texture *> textures {};
-
-        // static const size_t sprite_index = 0;
-        // size_t texture_counter = 0;
 
         inline static GL* instance_ = nullptr;
 };

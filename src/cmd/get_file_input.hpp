@@ -20,7 +20,7 @@ class Get_File_Input : public Abstract_Cmd {
             if (text_form) {
                 
             }else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to canvas");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }            
             *file_name_ = text_form -> get_message ();

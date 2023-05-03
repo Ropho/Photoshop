@@ -19,19 +19,10 @@ class Set_Tool_Color : public Abstract_Cmd {
             if (man)
                 man->set_color (color_);
             else {
-                Logger::Instance () -> log (__PF, 2, "unable to convert to manager");
+                Logger::Instance () -> log (__PF, LOG_LVL::FATAL, "unable to convert to manager");
                 std::terminate ();
             }
 
-            // Tool_Button *button = dynamic_cast <Tool_Button *> (argument);
-            // if (button == nullptr) {
-            //     Logger::Instance()->log (__PF, 2, "not tool button given =(");                
-            //     std::terminate ();
-            // }
-            // button -> set_current;
-            // canvas -> clear ();
-            // canvas->set_color (color_);
-            // canvas->init ();
         }
 
     private:
